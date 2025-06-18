@@ -150,8 +150,9 @@ class Portfolio3D {
         this.init();
         this.createNorthernLightsBackground();
         this.createBlinkingStarField();
-        this.createFloatingGeometries();
+        // this.createFloatingGeometries(); // Removed cubes and rings
         this.loadGLTFModels();
+        this.createRevolvingObjectTrails();
         this.setupEventListeners();
         this.animate();
     }
@@ -390,19 +391,37 @@ class Portfolio3D {
     createBlinkingStarField() {
         console.log('⭐ Creating beautiful blinking star field...');
         
-        const starCount = 1500; // More stars for a rich night sky
+        const starCount = 3000; // Much more stars for a rich night sky
         const positions = new Float32Array(starCount * 3);
         const colors = new Float32Array(starCount * 3);
         const sizes = new Float32Array(starCount);
         const phases = new Float32Array(starCount); // For individual blinking timing
+        const sparklePhases = new Float32Array(starCount); // For sparkling effects
+        
+        // Store star data for interactive effects
+        this.interactiveStars = [];
         
         for (let i = 0; i < starCount; i++) {
             const i3 = i * 3;
             
-            // Distribute stars across a wide area
-            positions[i3] = (Math.random() - 0.5) * 400;     // X
-            positions[i3 + 1] = (Math.random() - 0.5) * 300; // Y  
-            positions[i3 + 2] = (Math.random() - 0.5) * 300; // Z
+            // Distribute stars across a wider area
+            const x = (Math.random() - 0.5) * 500;
+            const y = (Math.random() - 0.5) * 400; 
+            const z = (Math.random() - 0.5) * 400;
+            
+            positions[i3] = x;
+            positions[i3 + 1] = y;
+            positions[i3 + 2] = z;
+            
+            // Store for interaction detection
+            this.interactiveStars.push({
+                id: i,
+                position: new THREE.Vector3(x, y, z),
+                isShootingStar: false,
+                shootingDirection: new THREE.Vector3(),
+                shootingSpeed: 0,
+                originalPosition: new THREE.Vector3(x, y, z)
+            });
             
             // Star colors with variety
             const starType = Math.random();
@@ -431,8 +450,9 @@ class Portfolio3D {
             // Variable star sizes
             sizes[i] = 2 + Math.random() * 8;
             
-            // Individual phase for unique blinking
+            // Individual phase for unique blinking and sparkling
             phases[i] = Math.random() * Math.PI * 2;
+            sparklePhases[i] = Math.random() * Math.PI * 2;
         }
         
         const geometry = new THREE.BufferGeometry();
@@ -440,6 +460,7 @@ class Portfolio3D {
         geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
         geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
         geometry.setAttribute('phase', new THREE.BufferAttribute(phases, 1));
+        geometry.setAttribute('sparklePhase', new THREE.BufferAttribute(sparklePhases, 1));
         
         // Enhanced star shader for beautiful blinking effects
         const starMaterial = new THREE.ShaderMaterial({
@@ -451,8 +472,10 @@ class Portfolio3D {
             vertexShader: `
                 attribute float size;
                 attribute float phase;
+                attribute float sparklePhase;
                 varying vec3 vColor;
                 varying float vAlpha;
+                varying float vSparkle;
                 uniform float time;
                 uniform vec2 mousePos;
                 
@@ -465,19 +488,26 @@ class Portfolio3D {
                     float blink2 = sin(time * 1.3 + phase * 1.7) * 0.3 + 0.7;
                     float blink3 = sin(time * 3.2 + phase * 0.8) * 0.2 + 0.8;
                     
-                    // Combine blinking effects
-                    float blinkEffect = blink1 * blink2 * blink3;
+                    // Sparkling effect - fast, intense twinkles
+                    float sparkle1 = sin(time * 8.0 + sparklePhase) * 0.4 + 0.6;
+                    float sparkle2 = sin(time * 12.0 + sparklePhase * 2.0) * 0.3 + 0.7;
+                    float sparkleIntensity = sparkle1 * sparkle2;
                     
-                    // Mouse interaction - brighten nearby stars
+                    // Combine blinking and sparkling effects
+                    float blinkEffect = blink1 * blink2 * blink3;
+                    float finalEffect = blinkEffect * (1.0 + sparkleIntensity * 0.8);
+                    
+                    // Mouse interaction - brighten nearby stars for shooting star potential
                     vec2 screenPos = (mvPosition.xy / mvPosition.w) * 0.5 + 0.5;
                     float mouseDist = distance(screenPos, mousePos);
-                    float mouseEffect = 1.0 + (1.0 - smoothstep(0.0, 0.4, mouseDist)) * 1.5;
+                    float mouseEffect = 1.0 + (1.0 - smoothstep(0.0, 0.3, mouseDist)) * 2.0;
                     
-                    // Final size with perspective
-                    gl_PointSize = size * blinkEffect * mouseEffect * (300.0 / -mvPosition.z);
+                    // Final size with perspective and effects
+                    gl_PointSize = size * finalEffect * mouseEffect * (400.0 / -mvPosition.z);
                     
-                    // Alpha variation for twinkling
-                    vAlpha = blinkEffect * (0.6 + 0.4 * sin(time * 3.5 + phase));
+                    // Alpha variation for twinkling and sparkling
+                    vAlpha = finalEffect * (0.5 + 0.5 * sin(time * 4.0 + phase));
+                    vSparkle = sparkleIntensity;
                     
                     gl_Position = projectionMatrix * mvPosition;
                 }
@@ -486,6 +516,7 @@ class Portfolio3D {
                 uniform sampler2D pointTexture;
                 varying vec3 vColor;
                 varying float vAlpha;
+                varying float vSparkle;
                 
                 void main() {
                     vec4 textureColor = texture2D(pointTexture, gl_PointCoord);
@@ -494,7 +525,15 @@ class Portfolio3D {
                     float distFromCenter = distance(gl_PointCoord, vec2(0.5));
                     float glow = 1.0 - smoothstep(0.0, 0.6, distFromCenter);
                     
-                    vec4 finalColor = vec4(vColor * glow, vAlpha) * textureColor;
+                    // Enhanced sparkling color enhancement with mouse proximity
+                    vec3 sparkleColor = vColor + vec3(0.3, 0.3, 0.3) * vSparkle;
+                    
+                    // Add constellation effect - bright connections near mouse
+                    float mouseDistance = distance(gl_PointCoord, vec2(0.5));
+                    float constellationGlow = 1.0 - smoothstep(0.1, 0.8, mouseDistance);
+                    sparkleColor += vec3(0.2, 0.4, 0.8) * constellationGlow * 0.5;
+                    
+                    vec4 finalColor = vec4(sparkleColor * glow, vAlpha) * textureColor;
                     
                     gl_FragColor = finalColor;
                 }
@@ -848,15 +887,8 @@ class Portfolio3D {
         // Store reference to update uniforms
         this.starMaterial = starMaterial;
         
-        // Create interactive star tracking
-        this.interactiveStars = [];
-        for (let i = 0; i < Math.min(starCount, 50); i++) {
-            this.interactiveStars.push({
-                index: i,
-                originalSize: sizes[i],
-                highlightIntensity: 0
-            });
-        }
+        // Create particle trails for revolving objects
+        this.createRevolvingObjectTrails();
         
         console.log('✅ Interactive blinking stars created (', starCount, 'stars)');
         
@@ -929,7 +961,8 @@ class Portfolio3D {
         const texture = new THREE.CanvasTexture(canvas);
         return texture;
     }
-      createParticles() {
+    
+    createParticles() {
         // This method is now simplified since we have a dedicated star field
         // Just create some basic floating particles for atmosphere
         const particleCount = 100;
@@ -964,104 +997,44 @@ class Portfolio3D {
     }
     
     createFloatingGeometries() {
-        // Neural Network Nodes
-        for (let i = 0; i < 8; i++) {
-            const geometry = new THREE.SphereGeometry(0.5, 16, 16);
-            const material = new THREE.MeshPhongMaterial({ 
-                color: 0x0BCEAF,
-                transparent: true,
-                opacity: 0.7,
-                emissive: 0x022222
-            });
-            const sphere = new THREE.Mesh(geometry, material);
-            
-            sphere.position.set(
-                (Math.random() - 0.5) * 50,
-                (Math.random() - 0.5) * 50,
-                (Math.random() - 0.5) * 50
-            );
-            
-            sphere.userData = {
-                originalY: sphere.position.y,
-                speed: Math.random() * 0.02 + 0.01
-            };
-            
-            this.geometries.push(sphere);
-            this.scene.add(sphere);
-        }
-        
-        // Tech-inspired wireframe cubes
-        for (let i = 0; i < 5; i++) {
-            const geometry = new THREE.BoxGeometry(2, 2, 2);
-            const material = new THREE.MeshBasicMaterial({ 
-                color: 0x6c757d,
-                wireframe: true,
-                transparent: true,
-                opacity: 0.3
-            });
-            const cube = new THREE.Mesh(geometry, material);
-            
-            cube.position.set(
-                (Math.random() - 0.5) * 60,
-                (Math.random() - 0.5) * 60,
-                (Math.random() - 0.5) * 60
-            );
-            
-            cube.userData = {
-                rotationSpeed: Math.random() * 0.02 + 0.005
-            };
-            
-            this.geometries.push(cube);
-            this.scene.add(cube);
-        }
-        
-        // Data flow rings
-        for (let i = 0; i < 3; i++) {
-            const geometry = new THREE.RingGeometry(3, 4, 32);
-            const material = new THREE.MeshBasicMaterial({ 
-                color: 0x078571,
-                transparent: true,
-                opacity: 0.4,
-                side: THREE.DoubleSide
-            });
-            const ring = new THREE.Mesh(geometry, material);
-            
-            ring.position.set(
-                (Math.random() - 0.5) * 40,
-                (Math.random() - 0.5) * 40,
-                (Math.random() - 0.5) * 40
-            );
-            
-            ring.rotation.x = Math.random() * Math.PI;
-            ring.rotation.y = Math.random() * Math.PI;
-            
-            ring.userData = {
-                rotationSpeed: Math.random() * 0.01 + 0.005
-            };
-            
-            this.geometries.push(ring);
-            this.scene.add(ring);
-        }
+        // Removed cubes and donut rings for cleaner background
+        console.log('🚫 Floating geometries disabled for cleaner look');
     }
     
     setupEventListeners() {
         // Enhanced mouse movement with star interaction
         document.addEventListener('mousemove', (event) => {
-            this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-            this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-            
-            // Update mouse position for star shader interaction
-            if (this.starMaterial && this.starMaterial.uniforms.mousePos) {
-                this.starMaterial.uniforms.mousePos.value.set(
-                    event.clientX / window.innerWidth,
-                    1.0 - event.clientY / window.innerHeight
-                );
+            this.handleStarInteraction(event);
+            this.handleBackgroundAssetInteraction(event);
+        });
+        
+        // Mouse click for enhanced star interaction
+        document.addEventListener('click', (event) => {
+            this.createClickShootingStars(event);
+        });
+        
+        // Touch support for mobile devices
+        document.addEventListener('touchmove', (event) => {
+            if (event.touches.length > 0) {
+                const touch = event.touches[0];
+                const fakeEvent = {
+                    clientX: touch.clientX,
+                    clientY: touch.clientY
+                };
+                this.handleStarInteraction(fakeEvent);
+                this.handleBackgroundAssetInteraction(fakeEvent);
             }
         });
         
-        // Mouse click for star interaction
-        document.addEventListener('click', (event) => {
-            this.handleStarClick(event);
+        document.addEventListener('touchstart', (event) => {
+            if (event.touches.length > 0) {
+                const touch = event.touches[0];
+                const fakeEvent = {
+                    clientX: touch.clientX,
+                    clientY: touch.clientY
+                };
+                this.createClickShootingStars(fakeEvent);
+            }
         });
         
         // Window resize
@@ -1077,59 +1050,106 @@ class Portfolio3D {
         });
     }
     
+    handleBackgroundAssetInteraction(event) {
+        // Create mouse influence on floating GLTF models
+        const mouseInfluence = {
+            x: (event.clientX / window.innerWidth - 0.5) * 2,
+            y: -(event.clientY / window.innerHeight - 0.5) * 2
+        };
+        
+        // Apply mouse influence to floating models
+        this.gltfModels.forEach(model => {
+            if (model.userData) {
+                // Magnetic effect - models slightly follow the mouse
+                const targetX = model.userData.originalX || model.position.x;
+                const targetZ = model.userData.originalZ || model.position.z;
+                
+                if (!model.userData.originalX) {
+                    model.userData.originalX = model.position.x;
+                    model.userData.originalZ = model.position.z;
+                }
+                
+                model.position.x += (targetX + mouseInfluence.x * 5 - model.position.x) * 0.02;
+                model.position.z += (targetZ + mouseInfluence.y * 3 - model.position.z) * 0.02;
+                
+                // Slight rotation based on mouse position
+                model.rotation.y += mouseInfluence.x * 0.001;
+                model.rotation.x += mouseInfluence.y * 0.0005;
+            }
+        });
+    }
+    
     handleStarClick(event) {
-        // Convert mouse coordinates to normalized device coordinates
+        // Create a ripple effect where clicked
+        const rippleEffect = this.createStarRipple(event.clientX, event.clientY);
+        
+        // Convert screen coordinates to world coordinates
         const mouse = new THREE.Vector2();
         mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
         mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
         
-        // Update the raycaster
-        this.raycaster.setFromCamera(mouse, this.camera);
-        
-        // Check for intersections with star particles
-        if (this.particles) {
-            const intersects = this.raycaster.intersectObject(this.particles);
-            
-            if (intersects.length > 0) {
-                // Create a ripple effect or constellation connection
-                this.createStarRipple(intersects[0].point);
-            }
+        // Create multiple shooting stars from click point
+        for (let i = 0; i < 3; i++) {
+            setTimeout(() => {
+                this.createRandomShootingStar(mouse);
+            }, i * 200);
         }
     }
     
-    createStarRipple(position) {
-        // Create a temporary ripple effect at the clicked star position
-        const rippleGeometry = new THREE.RingGeometry(0.1, 2, 16);
-        const rippleMaterial = new THREE.MeshBasicMaterial({
-            color: 0x88ff88,
-            transparent: true,
-            opacity: 0.8,
-            side: THREE.DoubleSide
-        });
+    createStarRipple(screenX, screenY) {
+        // Create visual ripple effect at click point
+        const ripple = document.createElement('div');
+        ripple.style.cssText = `
+            position: fixed;
+            left: ${screenX - 25}px;
+            top: ${screenY - 25}px;
+            width: 50px;
+            height: 50px;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1000;
+            animation: rippleEffect 1s ease-out forwards;
+        `;
         
-        const ripple = new THREE.Mesh(rippleGeometry, rippleMaterial);
-        ripple.position.copy(position);
-        ripple.lookAt(this.camera.position);
-        
-        this.scene.add(ripple);
-        
-        // Animate the ripple
-        const startTime = Date.now();
-        const animateRipple = () => {
-            const elapsed = (Date.now() - startTime) / 1000;
-            if (elapsed < 2) {
-                ripple.scale.setScalar(1 + elapsed * 3);
-                ripple.material.opacity = 0.8 * (1 - elapsed / 2);
-                requestAnimationFrame(animateRipple);
-            } else {
-                this.scene.remove(ripple);
-                rippleGeometry.dispose();
-                rippleMaterial.dispose();
+        // Add ripple animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes rippleEffect {
+                0% {
+                    transform: scale(0);
+                    opacity: 1;
+                }
+                100% {
+                    transform: scale(4);
+                    opacity: 0;
+                }
             }
-        };
-        animateRipple();
+        `;
+        document.head.appendChild(style);
+        document.body.appendChild(ripple);
+        
+        // Remove after animation
+        setTimeout(() => {
+            if (ripple.parentNode) {
+                ripple.parentNode.removeChild(ripple);
+            }
+        }, 1000);
     }
-
+    
+    createRandomShootingStar(mousePos) {
+        if (!this.interactiveStars || this.interactiveStars.length === 0) return;
+        
+        // Find a random star that's not already shooting
+        const availableStars = this.interactiveStars.filter(star => !star.isShootingStar);
+        if (availableStars.length === 0) return;
+        
+        const randomStar = availableStars[Math.floor(Math.random() * availableStars.length)];
+        const index = this.interactiveStars.indexOf(randomStar);
+        
+        this.createShootingStar(randomStar, index);
+    }
+    
     animate() {
         requestAnimationFrame(() => this.animate());
         
@@ -1154,18 +1174,158 @@ class Portfolio3D {
             // Breathing effect
             const breathingScale = 1 + Math.sin(time * 0.8) * 0.03;
             this.particles.scale.setScalar(breathingScale);
+            
+            // Animate shooting stars
+            if (this.interactiveStars && this.interactiveStars.length > 0) {
+                const positions = this.particles.geometry.attributes.position.array;
+                let needsUpdate = false;
+                
+                for (let i = 0; i < this.interactiveStars.length; i++) {
+                    const star = this.interactiveStars[i];
+                    
+                    if (star.isShootingStar) {
+                        // Move the star along its shooting direction
+                        star.position.add(
+                            star.shootingDirection.clone().multiplyScalar(star.shootingSpeed)
+                        );
+                        
+                        // Update position in geometry
+                        positions[i * 3] = star.position.x;
+                        positions[i * 3 + 1] = star.position.y;
+                        positions[i * 3 + 2] = star.position.z;
+                        
+                        needsUpdate = true;
+                    }
+                }
+                
+                if (needsUpdate) {
+                    this.particles.geometry.attributes.position.needsUpdate = true;
+                }
+            }
+        }
+        
+        // Animate GLTF models with scroll-based revolution
+        const scrollProgress = Math.min(window.scrollY / (document.documentElement.scrollHeight - window.innerHeight), 1);
+        this.scrollY = window.scrollY;
+        
+        this.gltfModels.forEach((model, index) => {
+            const userData = model.userData;
+            
+            if (userData.isRevolvingObject) {
+                // Calculate revolution based on scroll progress
+                const scrollRange = userData.scrollTriggerEnd - userData.scrollTriggerStart;
+                const scrollInRange = Math.max(0, Math.min(1, (scrollProgress - userData.scrollTriggerStart) / scrollRange));
+                
+                // Revolution angle progression
+                userData.targetRevolutionAngle = userData.revolutionAngle + (scrollInRange * Math.PI * 2);
+                
+                // Update position based on revolution
+                const revolutionX = Math.cos(userData.targetRevolutionAngle) * userData.revolutionRadius;
+                const revolutionZ = Math.sin(userData.targetRevolutionAngle) * userData.revolutionRadius;
+                
+                model.position.x = revolutionX;
+                model.position.z = revolutionZ - 30; // Offset to bring forward
+                model.position.y = userData.originalY + Math.sin(time * userData.floatSpeed) * 3;
+                
+                // Face the camera as objects revolve
+                model.lookAt(this.camera.position);
+                
+                // Scale based on distance to camera for depth effect
+                const distanceToCamera = model.position.distanceTo(this.camera.position);
+                const scaleMultiplier = Math.max(0.5, Math.min(2.0, 50 / distanceToCamera));
+                const baseScale = model.userData.baseScale || 1;
+                model.scale.setScalar(baseScale * scaleMultiplier);
+            } else {
+                // Regular floating animation for non-revolving objects
+                model.position.y = userData.originalY + Math.sin(time * userData.floatSpeed) * 2;
+                model.rotation.y += userData.rotationSpeed;
+                
+                // Update bubble position if it exists
+                if (userData.bubble) {
+                    userData.bubble.position.copy(model.position);
+                    userData.bubble.rotation.y += userData.rotationSpeed * 0.5;
+                    userData.bubble.material.opacity = 0.15 + Math.sin(time * 2) * 0.05;
+                }
+            }
+            
+            // Update animation mixer for animated models
+            if (userData.mixer) {
+                userData.mixer.update(deltaTime);
+            } else {
+                // Regular floating animation for non-revolving objects
+                model.position.y = userData.originalY + Math.sin(time * userData.floatSpeed) * 2;
+                model.rotation.y += userData.rotationSpeed;
+                
+                // Update bubble position if it exists
+                if (userData.bubble) {
+                    userData.bubble.position.copy(model.position);
+                    userData.bubble.rotation.y += userData.rotationSpeed * 0.5;
+                    userData.bubble.material.opacity = 0.15 + Math.sin(time * 2) * 0.05;
+                }
+            }
+            
+            // Update animation mixer for animated models
+            if (userData.mixer) {
+                userData.mixer.update(deltaTime);
+            }
+        });
+        
+        // Update particle trails for revolving objects
+        if (this.objectTrails) {
+            this.objectTrails.forEach(trailData => {
+                const model = trailData.model;
+                const positions = trailData.positions;
+                const currentIndex = trailData.currentIndex;
+                
+                // Add current position to trail
+                positions[currentIndex * 3] = model.position.x;
+                positions[currentIndex * 3 + 1] = model.position.y;
+                positions[currentIndex * 3 + 2] = model.position.z;
+                
+                // Move to next trail point
+                trailData.currentIndex = (currentIndex + 1) % 100;
+                
+                // Update trail geometry
+                trailData.trail.geometry.attributes.position.needsUpdate = true;
+            });
+        }
+        
+        // Handle shooting stars based on mouse interaction
+        if (this.interactiveStars && this.particles) {
+            const positions = this.particles.geometry.attributes.position.array;
+            let needsUpdate = false;
+            
+            this.interactiveStars.forEach((star, index) => {
+                if (star.isShootingStar) {
+                    // Move shooting star
+                    star.position.add(star.shootingDirection.clone().multiplyScalar(star.shootingSpeed));
+                    
+                    // Update position in geometry
+                    if (index * 3 + 2 < positions.length) {
+                        positions[index * 3] = star.position.x;
+                        positions[index * 3 + 1] = star.position.y;
+                        positions[index * 3 + 2] = star.position.z;
+                        
+                        needsUpdate = true;
+                    }
+                }
+            });
+            
+            if (needsUpdate) {
+                this.particles.geometry.attributes.position.needsUpdate = true;
+            }
         }
         
         // Enhanced camera movement with mouse following
-        this.camera.position.x += (this.mouse.x * 5 - this.camera.position.x) * 0.02;
-        this.camera.position.y += (-this.mouse.y * 5 - this.camera.position.y) * 0.02;
+        this.camera.position.x += (this.mouse.x * 3 - this.camera.position.x) * 0.02;
+        this.camera.position.y += (-this.mouse.y * 3 - this.camera.position.y) * 0.02;
         
         // Add subtle camera sway
-        this.camera.position.x += Math.sin(time * 0.2) * 0.8;
-        this.camera.position.y += Math.cos(time * 0.15) * 0.6;
+        this.camera.position.x += Math.sin(time * 0.2) * 0.5;
+        this.camera.position.y += Math.cos(time * 0.15) * 0.3;
         
-        // Scroll-based camera distance
-        const targetZ = 30 + (this.scrollY * 0.02);
+        // Scroll-based camera distance for dynamic perspective
+        const targetZ = 30 + (scrollProgress * 20);
         this.camera.position.z += (targetZ - this.camera.position.z) * 0.03;
         
         this.camera.lookAt(this.scene.position);
@@ -1186,7 +1346,7 @@ class Portfolio3D {
         
         const loader = new THREE.GLTFLoader();
         let modelsLoaded = 0;
-        const totalModels = 3;
+        const totalModels = 8; // Increased number of models
         
         const updateStatus = (type, message) => {
             const element = document.getElementById(`${type}-status`);
@@ -1203,32 +1363,73 @@ class Portfolio3D {
                 updateStatus('models', 'All loaded ✅');
             }
         };
+
+        // Load The Thinker model for interactive profile picture
+        loader.load(
+            'assets/the_thinker_by_auguste_rodin/scene.gltf',
+            (gltf) => {
+                console.log('✅ Thinker model loaded:', gltf);
+                
+                this.thinkerModel = gltf.scene;
+                this.thinkerModel.scale.set(0.15, 0.15, 0.15); // Appropriate size for profile
+                this.thinkerModel.position.set(0, 0, 0); // Will be positioned by CSS
+                this.thinkerModel.rotation.set(0, Math.PI / 4, 0); // Nice viewing angle
+                
+                // Store for interactive rotation
+                this.thinkerModel.userData = {
+                    isInteractive: true,
+                    rotationSpeed: 0.005,
+                    baseRotationY: Math.PI / 4,
+                    hoverRotationY: 0,
+                    targetRotationY: Math.PI / 4,
+                    isHovered: false
+                };
+                
+                // Add to scene but will be positioned using CSS
+                this.scene.add(this.thinkerModel);
+                
+                // Replace profile pictures with 3D canvas
+                this.setupThinkerProfilePicture();
+                
+                modelLoaded();
+                console.log('🗿 The Thinker model ready for interaction');
+            },
+            (progress) => {
+                console.log('Thinker loading progress:', (progress.loaded / progress.total * 100) + '%');
+            },
+            (error) => {
+                console.error('❌ Error loading Thinker model:', error);
+                modelLoaded();
+            }
+        );
         
-        // Load brain point cloud model - positioned much further away
+        // Load brain point cloud model for interactive profile picture
         loader.load(
             'assets/brain_point_cloud/scene.gltf',
             (gltf) => {
                 console.log('✅ Brain model loaded:', gltf);
                 
-                const brain = gltf.scene;
-                brain.scale.set(5, 5, 5); // Made larger for visibility
-                brain.position.set(-40, 20, -35); // Closer for better visibility
-                brain.rotation.set(0, Math.PI / 4, 0);
+                // Store the brain model for profile use
+                this.brainModel = gltf.scene;
+                this.brainModel.scale.set(0.2, 0.2, 0.2); // Appropriate size for profile
+                this.brainModel.position.set(0, 0, 0); // Will be positioned by CSS
+                this.brainModel.rotation.set(0, Math.PI / 4, 0); // Nice viewing angle
                 
-                // Store for animation
-                brain.userData = {
-                    rotationSpeed: 0.005,
-                    floatSpeed: 0.01,
-                    originalY: brain.position.y,
-                    revolutionRadius: 50, // Smaller revolution radius
-                    revolutionSpeed: 0.003
+                // Store for interactive rotation
+                this.brainModel.userData = {
+                    isInteractive: true,
+                    rotationSpeed: 0.008,
+                    baseRotationY: Math.PI / 4,
+                    hoverRotationY: 0,
+                    targetRotationY: Math.PI / 4,
+                    isHovered: false
                 };
                 
-                this.gltfModels.push(brain);
-                this.scene.add(brain);
-                modelLoaded();
+                // Replace profile pictures with 3D canvas
+                this.setupBrainProfilePicture();
                 
-                console.log('🧠 Brain model added to scene');
+                modelLoaded();
+                console.log('🧠 Brain model ready for interactive profile');
             },
             (progress) => {
                 console.log('Brain loading progress:', (progress.loaded / progress.total * 100) + '%');
@@ -1240,31 +1441,37 @@ class Portfolio3D {
             }
         );
         
-        // Load Shiba dog model - positioned much further away
+        // Load Shiba dog model - part of revolving background objects
         loader.load(
             'assets/shiba/scene.gltf',
             (gltf) => {
                 console.log('✅ Shiba model loaded:', gltf);
                 
                 const shiba = gltf.scene;
-                shiba.scale.set(0.8, 0.8, 0.8); // Larger for visibility
-                shiba.position.set(30, -10, -25); // Closer for better visibility
+                shiba.scale.set(1.2, 1.2, 1.2);
+                shiba.position.set(40, -5, -40); // Start further back
                 shiba.rotation.set(0, -Math.PI / 2, 0);
                 
-                // Store for animation
+                // Store for scroll-based revolution animation
                 shiba.userData = {
                     rotationSpeed: 0.01,
                     floatSpeed: 0.005,
                     originalY: shiba.position.y,
-                    revolutionRadius: 40,
-                    revolutionSpeed: 0.004
+                    revolutionRadius: 60,
+                    revolutionSpeed: 0.006,
+                    revolutionAngle: 0, // Starting angle
+                    targetRevolutionAngle: 0,
+                    isRevolvingObject: true,
+                    scrollTriggerStart: 0.2, // Starts revolving at 20% scroll
+                    scrollTriggerEnd: 0.8,    // Finishes at 80% scroll
+                    baseScale: 1.2
                 };
                 
                 this.gltfModels.push(shiba);
                 this.scene.add(shiba);
                 modelLoaded();
                 
-                console.log('🐕 Shiba model added to scene');
+                console.log('🐕 Shiba model added as revolving object');
             },
             (progress) => {
                 console.log('Shiba loading progress:', (progress.loaded / progress.total * 100) + '%');
@@ -1276,15 +1483,15 @@ class Portfolio3D {
             }
         );
         
-        // Load animated cat model - positioned much further away
+        // Load animated cat model - part of revolving background objects
         loader.load(
             'assets/an-animated-cat/source/scene.gltf',
             (gltf) => {
                 console.log('✅ Cat model loaded:', gltf);
                 
                 const cat = gltf.scene;
-                cat.scale.set(3, 3, 3); // Larger for visibility
-                cat.position.set(0, -20, -20); // Closer for better visibility
+                cat.scale.set(4, 4, 4);
+                cat.position.set(0, -15, -50); // Start much further back
                 
                 // Set up animation mixer if animations exist
                 if (gltf.animations && gltf.animations.length > 0) {
@@ -1296,21 +1503,27 @@ class Portfolio3D {
                     console.log('🎬 Cat animations playing');
                 }
                 
-                // Store for animation
+                // Store for scroll-based revolution animation
                 cat.userData = {
                     ...cat.userData,
                     rotationSpeed: 0.003,
                     floatSpeed: 0.008,
                     originalY: cat.position.y,
-                    revolutionRadius: 35,
-                    revolutionSpeed: 0.005
+                    revolutionRadius: 70,
+                    revolutionSpeed: 0.008,
+                    revolutionAngle: Math.PI, // Start at opposite side
+                    targetRevolutionAngle: Math.PI,
+                    isRevolvingObject: true,
+                    scrollTriggerStart: 0.4, // Starts revolving at 40% scroll
+                    scrollTriggerEnd: 1.0,    // Finishes at 100% scroll
+                    baseScale: 4
                 };
                 
                 this.gltfModels.push(cat);
                 this.scene.add(cat);
                 modelLoaded();
                 
-                console.log('🐱 Cat model added to scene');
+                console.log('🐱 Cat model added as revolving object');
             },
             (progress) => {
                 console.log('Cat loading progress:', (progress.loaded / progress.total * 100) + '%');
@@ -1318,6 +1531,167 @@ class Portfolio3D {
             (error) => {
                 console.error('❌ Error loading Cat model:', error);
                 this.createFallbackCat();
+                modelLoaded();
+            }
+        );
+        
+        // Load additional revolving objects
+        
+        // Load Arduino Uno model
+        loader.load(
+            'assets/arduino_uno_r3_elegoo/scene.gltf',
+            (gltf) => {
+                console.log('✅ Arduino model loaded:', gltf);
+                
+                const arduino = gltf.scene;
+                arduino.scale.set(0.1, 0.1, 0.1);
+                arduino.position.set(-50, 0, -60);
+                arduino.rotation.set(0, Math.PI / 3, 0);
+                
+                arduino.userData = {
+                    rotationSpeed: 0.015,
+                    floatSpeed: 0.003,
+                    originalY: arduino.position.y,
+                    revolutionRadius: 80,
+                    revolutionSpeed: 0.005,
+                    revolutionAngle: Math.PI / 2,
+                    targetRevolutionAngle: Math.PI / 2,
+                    isRevolvingObject: true,
+                    scrollTriggerStart: 0.1,
+                    scrollTriggerEnd: 0.6,
+                    baseScale: 0.1
+                };
+                
+                this.gltfModels.push(arduino);
+                this.scene.add(arduino);
+                modelLoaded();
+                
+                console.log('🔧 Arduino model added as revolving object');
+            },
+            (progress) => {
+                console.log('Arduino loading progress:', (progress.loaded / progress.total * 100) + '%');
+            },
+            (error) => {
+                console.error('❌ Error loading Arduino model:', error);
+                modelLoaded();
+            }
+        );
+        
+        // Load Stylized Planet model
+        loader.load(
+            'assets/stylized_planet/scene.gltf',
+            (gltf) => {
+                console.log('✅ Planet model loaded:', gltf);
+                
+                const planet = gltf.scene;
+                planet.scale.set(2, 2, 2);
+                planet.position.set(60, 20, -70);
+                
+                planet.userData = {
+                    rotationSpeed: 0.02,
+                    floatSpeed: 0.006,
+                    originalY: planet.position.y,
+                    revolutionRadius: 90,
+                    revolutionSpeed: 0.004,
+                    revolutionAngle: -Math.PI / 3,
+                    targetRevolutionAngle: -Math.PI / 3,
+                    isRevolvingObject: true,
+                    scrollTriggerStart: 0.3,
+                    scrollTriggerEnd: 0.9,
+                    baseScale: 2
+                };
+                
+                this.gltfModels.push(planet);
+                this.scene.add(planet);
+                modelLoaded();
+                
+                console.log('🪐 Planet model added as revolving object');
+            },
+            (progress) => {
+                console.log('Planet loading progress:', (progress.loaded / progress.total * 100) + '%');
+            },
+            (error) => {
+                console.error('❌ Error loading Planet model:', error);
+                modelLoaded();
+            }
+        );
+        
+        // Load Norwegian Troll model
+        loader.load(
+            'assets/norwegian_troll/scene.gltf',
+            (gltf) => {
+                console.log('✅ Troll model loaded:', gltf);
+                
+                const troll = gltf.scene;
+                troll.scale.set(0.05, 0.05, 0.05);
+                troll.position.set(-40, -30, -80);
+                troll.rotation.set(0, Math.PI, 0);
+                
+                troll.userData = {
+                    rotationSpeed: 0.006,
+                    floatSpeed: 0.004,
+                    originalY: troll.position.y,
+                    revolutionRadius: 100,
+                    revolutionSpeed: 0.003,
+                    revolutionAngle: Math.PI * 1.5,
+                    targetRevolutionAngle: Math.PI * 1.5,
+                    isRevolvingObject: true,
+                    scrollTriggerStart: 0.5,
+                    scrollTriggerEnd: 1.0,
+                    baseScale: 0.05
+                };
+                
+                this.gltfModels.push(troll);
+                this.scene.add(troll);
+                modelLoaded();
+                
+                console.log('👹 Troll model added as revolving object');
+            },
+            (progress) => {
+                console.log('Troll loading progress:', (progress.loaded / progress.total * 100) + '%');
+            },
+            (error) => {
+                console.error('❌ Error loading Troll model:', error);
+                modelLoaded();
+            }
+        );
+        
+        // Load Vinyl Player model
+        loader.load(
+            'assets/vinyl_player_pioneer/scene.gltf',
+            (gltf) => {
+                console.log('✅ Vinyl Player model loaded:', gltf);
+                
+                const vinyl = gltf.scene;
+                vinyl.scale.set(0.03, 0.03, 0.03);
+                vinyl.position.set(70, 10, -50);
+                vinyl.rotation.set(0, -Math.PI / 4, 0);
+                
+                vinyl.userData = {
+                    rotationSpeed: 0.025, // Faster rotation for vinyl
+                    floatSpeed: 0.002,
+                    originalY: vinyl.position.y,
+                    revolutionRadius: 75,
+                    revolutionSpeed: 0.007,
+                    revolutionAngle: -Math.PI / 6,
+                    targetRevolutionAngle: -Math.PI / 6,
+                    isRevolvingObject: true,
+                    scrollTriggerStart: 0.15,
+                    scrollTriggerEnd: 0.7,
+                    baseScale: 0.03
+                };
+                
+                this.gltfModels.push(vinyl);
+                this.scene.add(vinyl);
+                modelLoaded();
+                
+                console.log('🎵 Vinyl Player model added as revolving object');
+            },
+            (progress) => {
+                console.log('Vinyl loading progress:', (progress.loaded / progress.total * 100) + '%');
+            },
+            (error) => {
+                console.error('❌ Error loading Vinyl model:', error);
                 modelLoaded();
             }
         );
@@ -1350,7 +1724,7 @@ class Portfolio3D {
             emissive: 0x331122
         });
         const brain = new THREE.Mesh(geometry, material);
-        brain.position.set(-40, 20, -35);
+        brain.position.set(-20, 15, -15); // Much closer to the camera
         
         brain.userData = {
             rotationSpeed: 0.005,
@@ -1412,6 +1786,425 @@ class Portfolio3D {
         this.gltfModels.push(cat);
         this.scene.add(cat);
         console.log('🐱 Fallback cat created');
+    }
+    
+    setupThinkerProfilePicture() {
+        console.log('🗿 Setting up interactive Thinker profile picture...');
+        
+        // Wait a moment for the model to be fully loaded
+        setTimeout(() => {
+            this.createThinkerProfile();
+        }, 1000);
+    }
+    
+    setupBrainProfilePicture() {
+        console.log('🧠 Setting up interactive Brain profile picture...');
+        
+        // Wait a moment for the model to be fully loaded
+        setTimeout(() => {
+            this.createBrainProfile();
+        }, 1000);
+    }
+    
+    createThinkerProfile() {
+        const container = document.getElementById('thinker-profile-1');
+        if (!container || !this.thinkerModel) {
+            console.log('Thinker container or model not found, retrying...');
+            setTimeout(() => this.createThinkerProfile(), 500);
+            return;
+        }
+        
+        // Create canvas
+        const canvas = document.createElement('canvas');
+        canvas.width = 300;
+        canvas.height = 300;
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
+        canvas.style.borderRadius = '50%';
+        canvas.style.cursor = 'pointer';
+        
+        // Create separate scene for Thinker
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
+        camera.position.set(0, 0, 6);
+        
+        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+        renderer.setSize(300, 300);
+        renderer.setClearColor(0x000000, 0);
+        
+        // Clone and position the Thinker model
+        const thinker = this.thinkerModel.clone();
+        thinker.scale.set(2.0, 2.0, 2.0);
+        thinker.position.set(0, -1.5, 0);
+        thinker.rotation.y = Math.PI / 4;
+        
+        // Create spherical bubble around thinker
+        const bubbleGeometry = new THREE.SphereGeometry(2.8, 32, 32);
+        const bubbleMaterial = new THREE.MeshPhongMaterial({
+            color: 0xe6ff08,
+            transparent: true,
+            opacity: 0.15,
+            side: THREE.DoubleSide,
+            shininess: 100
+        });
+        const bubble = new THREE.Mesh(bubbleGeometry, bubbleMaterial);
+        bubble.position.set(0, -1.5, 0);
+        
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0x404040, 0.8);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1.0);
+        directionalLight.position.set(5, 5, 5);
+        scene.add(ambientLight);
+        scene.add(directionalLight);
+        scene.add(thinker);
+        scene.add(bubble);
+        
+        // Add canvas to container
+        container.appendChild(canvas);
+        
+        // Mouse interaction
+        let isMouseDown = false;
+        let mouseX = 0, mouseY = 0;
+        let isHovered = false;
+        
+        canvas.addEventListener('mousedown', (e) => {
+            isMouseDown = true;
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+        
+        canvas.addEventListener('mouseup', () => {
+            isMouseDown = false;
+        });
+        
+        canvas.addEventListener('mouseenter', () => {
+            isHovered = true;
+            canvas.style.transform = 'scale(1.05)';
+            canvas.style.transition = 'transform 0.3s ease';
+        });
+        
+        canvas.addEventListener('mouseleave', () => {
+            isHovered = false;
+            canvas.style.transform = 'scale(1)';
+        });
+        
+        canvas.addEventListener('mousemove', (e) => {
+            if (isMouseDown) {
+                const deltaX = e.clientX - mouseX;
+                const deltaY = e.clientY - mouseY;
+                
+                thinker.rotation.y += deltaX * 0.01;
+                thinker.rotation.x += deltaY * 0.01;
+                
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            }
+        });
+        
+        // Animation loop
+        const animate = () => {
+            const time = Date.now() * 0.001;
+            
+            // Auto-rotation when not being manually controlled
+            if (!isMouseDown) {
+                thinker.rotation.y += 0.005;
+            }
+            
+            // Bubble animation
+            bubble.rotation.y += 0.003;
+            bubble.rotation.x += 0.002;
+            bubble.material.opacity = 0.1 + Math.sin(time * 2) * 0.05;
+            
+            // Hover effects
+            if (isHovered) {
+                bubble.material.opacity = Math.min(0.25, bubble.material.opacity + 0.1);
+                const hoverScale = 1 + Math.sin(time * 3) * 0.02;
+                bubble.scale.setScalar(hoverScale);
+            } else {
+                const normalScale = 1 + Math.sin(time * 1.5) * 0.01;
+                bubble.scale.setScalar(normalScale);
+            }
+            
+            renderer.render(scene, camera);
+            requestAnimationFrame(animate);
+        };
+        animate();
+        
+        console.log('✅ Thinker profile with spherical bubble created and interactive');
+    }
+    
+    createBrainProfile() {
+        const container = document.getElementById('brain-profile-2');
+        if (!container || !this.brainModel) {
+            console.log('Brain container or model not found, retrying...');
+            setTimeout(() => this.createBrainProfile(), 500);
+            return;
+        }
+        
+        // Create canvas
+        const canvas = document.createElement('canvas');
+        canvas.width = 400;
+        canvas.height = 400;
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
+        canvas.style.borderRadius = '15px';
+        canvas.style.cursor = 'pointer';
+        
+        // Create separate scene for Brain
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
+        camera.position.set(0, 0, 8);
+        
+        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+        renderer.setSize(400, 400);
+        renderer.setClearColor(0x000000, 0);
+        
+        // Clone and position the Brain model
+        const brain = this.brainModel.clone();
+        brain.scale.set(3.0, 3.0, 3.0);
+        brain.position.set(0, 0, 0);
+        brain.rotation.y = Math.PI / 4;
+        
+        // Create spherical bubble around brain
+        const bubbleGeometry = new THREE.SphereGeometry(3.5, 32, 32);
+        const bubbleMaterial = new THREE.MeshPhongMaterial({
+            color: 0x0BCEAF,
+            transparent: true,
+            opacity: 0.15,
+            side: THREE.DoubleSide,
+            shininess: 100,
+            emissive: 0x0BCEAF,
+            emissiveIntensity: 0.05
+        });
+        const bubble = new THREE.Mesh(bubbleGeometry, bubbleMaterial);
+        bubble.position.set(0, 0, 0);
+        
+        // Add inner glow effect
+        const innerGlowGeometry = new THREE.SphereGeometry(3.2, 16, 16);
+        const innerGlowMaterial = new THREE.MeshBasicMaterial({
+            color: 0x0BCEAF,
+            transparent: true,
+            opacity: 0.08,
+            side: THREE.BackSide
+        });
+        const innerGlow = new THREE.Mesh(innerGlowGeometry, innerGlowMaterial);
+        innerGlow.position.set(0, 0, 0);
+        
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0x404040, 0.8);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1.0);
+        directionalLight.position.set(5, 5, 5);
+        
+        // Add special brain lighting
+        const brainLight = new THREE.PointLight(0x0BCEAF, 0.5, 20);
+        brainLight.position.set(0, 2, 5);
+        
+        scene.add(ambientLight);
+        scene.add(directionalLight);
+        scene.add(brainLight);
+        scene.add(brain);
+        scene.add(bubble);
+        scene.add(innerGlow);
+        
+        // Add canvas to container
+        container.appendChild(canvas);
+        
+        // Mouse interaction
+        let isMouseDown = false;
+        let mouseX = 0, mouseY = 0;
+        let isHovered = false;
+        
+        canvas.addEventListener('mousedown', (e) => {
+            isMouseDown = true;
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+        
+        canvas.addEventListener('mouseup', () => {
+            isMouseDown = false;
+        });
+        
+        canvas.addEventListener('mouseenter', () => {
+            isHovered = true;
+            canvas.style.transform = 'scale(1.05)';
+            canvas.style.transition = 'transform 0.3s ease';
+        });
+        
+        canvas.addEventListener('mouseleave', () => {
+            isHovered = false;
+            canvas.style.transform = 'scale(1)';
+        });
+        
+        canvas.addEventListener('mousemove', (e) => {
+            if (isMouseDown) {
+                const deltaX = e.clientX - mouseX;
+                const deltaY = e.clientY - mouseY;
+                
+                brain.rotation.y += deltaX * 0.01;
+                brain.rotation.x += deltaY * 0.01;
+                
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            }
+        });
+        
+        // Animation loop
+        const animate = () => {
+            const time = Date.now() * 0.001;
+            
+            // Auto-rotation when not being manually controlled
+            if (!isMouseDown) {
+                brain.rotation.y += 0.008;
+                brain.rotation.x += Math.sin(time * 0.5) * 0.002;
+            }
+            
+            // Bubble animation
+            bubble.rotation.y += 0.004;
+            bubble.rotation.x += 0.003;
+            bubble.material.opacity = 0.12 + Math.sin(time * 2) * 0.05;
+            
+            // Inner glow animation
+            innerGlow.rotation.y -= 0.002;
+            innerGlow.rotation.z += 0.001;
+            innerGlow.material.opacity = 0.06 + Math.sin(time * 3) * 0.03;
+            
+            // Brain light pulsing
+            brainLight.intensity = 0.4 + Math.sin(time * 4) * 0.2;
+            
+            // Hover effects
+            if (isHovered) {
+                bubble.material.opacity = Math.min(0.25, bubble.material.opacity + 0.1);
+                innerGlow.material.opacity = Math.min(0.15, innerGlow.material.opacity + 0.05);
+                const hoverScale = 1 + Math.sin(time * 3) * 0.03;
+                bubble.scale.setScalar(hoverScale);
+                innerGlow.scale.setScalar(hoverScale * 0.95);
+            } else {
+                const normalScale = 1 + Math.sin(time * 1.5) * 0.01;
+                bubble.scale.setScalar(normalScale);
+                innerGlow.scale.setScalar(normalScale * 0.95);
+            }
+            
+            // Brain floating effect
+            brain.position.y = Math.sin(time * 1.2) * 0.1;
+            
+            renderer.render(scene, camera);
+            requestAnimationFrame(animate);
+        };
+        animate();
+        
+        console.log('✅ Brain profile with spherical bubble created and interactive');
+    }
+    
+    handleStarInteraction(event) {
+        // Update mouse position for star interactions
+        this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+        
+        // Update star material mouse position for real-time shader effects
+        if (this.starMaterial) {
+            this.starMaterial.uniforms.mousePos.value.set(
+                (event.clientX / window.innerWidth),
+                1.0 - (event.clientY / window.innerHeight)
+            );
+        }
+        
+        // Simple distance-based shooting star creation
+        if (this.interactiveStars && this.particles) {
+            const mouseWorldPos = new THREE.Vector3();
+            mouseWorldPos.x = this.mouse.x * 200; // Scale to world coordinates
+            mouseWorldPos.y = this.mouse.y * 150;
+            mouseWorldPos.z = 0;
+            
+            // Check nearby stars for shooting star effect
+            for (let i = 0; i < this.interactiveStars.length; i++) {
+                const star = this.interactiveStars[i];
+                
+                if (!star.isShootingStar) {
+                    const distance = star.position.distanceTo(mouseWorldPos);
+                    
+                    // If mouse is close enough to a star, make it a shooting star
+                    if (distance < 50) {
+                        this.createShootingStar(star, i);
+                        break; // Only create one shooting star at a time
+                    }
+                }
+            }
+        }
+    }
+    
+    createShootingStar(star, index) {
+        console.log('🌠 Creating shooting star!');
+        
+        star.isShootingStar = true;
+        
+        // Random shooting direction
+        star.shootingDirection.set(
+            (Math.random() - 0.5) * 2,
+            (Math.random() - 0.5) * 2,
+            (Math.random() - 0.5) * 2
+        ).normalize();
+        
+        star.shootingSpeed = 2 + Math.random() * 3;
+        
+        // Reset after 3 seconds
+        setTimeout(() => {
+            star.isShootingStar = false;
+            star.position.copy(star.originalPosition);
+            
+            // Update position in geometry
+            const positions = this.particles.geometry.attributes.position.array;
+            positions[index * 3] = star.position.x;
+            positions[index * 3 + 1] = star.position.y;
+            positions[index * 3 + 2] = star.position.z;
+            this.particles.geometry.attributes.position.needsUpdate = true;
+        }, 3000);
+    }
+    
+    // Create particle trails for revolving objects
+    createRevolvingObjectTrails() {
+        this.objectTrails = [];
+        
+        this.gltfModels.forEach((model, index) => {
+            if (model.userData.isRevolvingObject) {
+                const trailGeometry = new THREE.BufferGeometry();
+                const trailPositions = new Float32Array(100 * 3); // 100 trail points
+                const trailColors = new Float32Array(100 * 3);
+                
+                // Initialize trail
+                for (let i = 0; i < 100; i++) {
+                    trailPositions[i * 3] = model.position.x;
+                    trailPositions[i * 3 + 1] = model.position.y;
+                    trailPositions[i * 3 + 2] = model.position.z;
+                    
+                    const alpha = i / 100;
+                    trailColors[i * 3] = 0.0 + alpha * 0.7; // R
+                    trailColors[i * 3 + 1] = 0.8 + alpha * 0.2; // G
+                    trailColors[i * 3 + 2] = 0.9 + alpha * 0.1; // B
+                }
+                
+                trailGeometry.setAttribute('position', new THREE.BufferAttribute(trailPositions, 3));
+                trailGeometry.setAttribute('color', new THREE.BufferAttribute(trailColors, 3));
+                
+                const trailMaterial = new THREE.LineBasicMaterial({
+                    vertexColors: true,
+                    transparent: true,
+                    opacity: 0.6,
+                    linewidth: 2
+                });
+                
+                const trail = new THREE.Line(trailGeometry, trailMaterial);
+                this.scene.add(trail);
+                
+                this.objectTrails.push({
+                    trail: trail,
+                    model: model,
+                    positions: trailPositions,
+                    currentIndex: 0
+                });
+            }
+        });
+        
+        console.log('✨ Particle trails created for revolving objects');
     }
 }
 
@@ -1505,5 +2298,194 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     }
+});
+
+// Enhanced Interactive Features for Portfolio
+
+// Create interactive cursor
+function createInteractiveCursor() {
+    const cursor = document.createElement('div');
+    cursor.classList.add('interactive-cursor');
+    document.body.appendChild(cursor);
+    
+    let mouseX = 0, mouseY = 0;
+    let cursorX = 0, cursorY = 0;
+    
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+    });
+    
+    function animateCursor() {
+        cursorX += (mouseX - cursorX) * 0.1;
+        cursorY += (mouseY - cursorY) * 0.1;
+        
+        cursor.style.left = cursorX - 10 + 'px';
+        cursor.style.top = cursorY - 10 + 'px';
+        
+        requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
+    
+    // Enhance cursor on hover
+    const interactiveElements = document.querySelectorAll('button, a, .service-box, .profile-image, .display-3');
+    interactiveElements.forEach(element => {
+        element.addEventListener('mouseenter', () => {
+            cursor.style.transform = 'scale(2)';
+            cursor.style.background = 'radial-gradient(circle, rgba(230, 255, 8, 0.8) 0%, transparent 70%)';
+        });
+        
+        element.addEventListener('mouseleave', () => {
+            cursor.style.transform = 'scale(1)';
+            cursor.style.background = 'radial-gradient(circle, rgba(11, 206, 175, 0.8) 0%, transparent 70%)';
+        });
+    });
+}
+
+// Create scroll progress indicator
+function createScrollIndicator() {
+    const indicator = document.createElement('div');
+    indicator.classList.add('scroll-indicator');
+    document.body.appendChild(indicator);
+    
+    window.addEventListener('scroll', () => {
+        const scrollProgress = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+        indicator.style.transform = `scaleX(${scrollProgress})`;
+    });
+}
+
+// Enhanced section card interactions
+function enhanceSectionCards() {
+    const serviceBoxes = document.querySelectorAll('.service-box');
+    
+    serviceBoxes.forEach((box, index) => {
+        // Add staggered hover effects
+        box.style.transitionDelay = `${index * 0.1}s`;
+        
+        // Add magnetic effect
+        box.addEventListener('mousemove', (e) => {
+            const rect = box.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            const deltaX = (e.clientX - centerX) * 0.1;
+            const deltaY = (e.clientY - centerY) * 0.1;
+            
+            box.style.transform = `translateY(-10px) scale(1.02) translate(${deltaX}px, ${deltaY}px)`;
+        });
+        
+        box.addEventListener('mouseleave', () => {
+            box.style.transform = 'translateY(0) scale(1) translate(0, 0)';
+        });
+        
+        // Add particle burst effect on click
+        box.addEventListener('click', (e) => {
+            createParticleBurst(e.clientX, e.clientY);
+        });
+    });
+}
+
+// Particle burst effect
+function createParticleBurst(x, y) {
+    for (let i = 0; i < 12; i++) {
+        const particle = document.createElement('div');
+        particle.style.cssText = `
+            position: fixed;
+            left: ${x}px;
+            top: ${y}px;
+            width: 4px;
+            height: 4px;
+            background: #0BCEAF;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1000;
+        `;
+        
+        document.body.appendChild(particle);
+        
+        const angle = (i / 12) * Math.PI * 2;
+        const velocity = 50 + Math.random() * 50;
+        const vx = Math.cos(angle) * velocity;
+        const vy = Math.sin(angle) * velocity;
+        
+        let posX = 0, posY = 0;
+        let opacity = 1;
+        
+        function animateParticle() {
+            posX += vx * 0.02;
+            posY += vy * 0.02;
+            opacity -= 0.02;
+            
+            particle.style.transform = `translate(${posX}px, ${posY}px)`;
+            particle.style.opacity = opacity;
+            
+            if (opacity > 0) {
+                requestAnimationFrame(animateParticle);
+            } else {
+                particle.remove();
+            }
+        }
+        animateParticle();
+    }
+}
+
+// Enhanced name interaction
+function enhanceNameInteraction() {
+    const nameElement = document.querySelector('.display-3');
+    if (nameElement) {
+        nameElement.addEventListener('click', () => {
+            // Create rainbow text effect
+            const text = nameElement.textContent;
+            const colors = ['#ff0000', '#ff8000', '#ffff00', '#80ff00', '#00ff00', '#00ff80', '#00ffff', '#0080ff', '#0000ff', '#8000ff', '#ff00ff', '#ff0080'];
+            
+            nameElement.innerHTML = text.split('').map((char, index) => 
+                `<span style="color: ${colors[index % colors.length]}; transition: color 0.5s ease; display: inline-block;">${char}</span>`
+            ).join('');
+            
+            // Reset after animation
+            setTimeout(() => {
+                nameElement.innerHTML = text;
+            }, 2000);
+        });
+        
+        // Add floating letters effect on hover
+        nameElement.addEventListener('mouseenter', () => {
+            const letters = nameElement.querySelectorAll('span');
+            letters.forEach((letter, index) => {
+                setTimeout(() => {
+                    letter.style.transform = `translateY(${Math.random() * 10 - 5}px) rotate(${Math.random() * 10 - 5}deg)`;
+                }, index * 50);
+            });
+        });
+        
+        nameElement.addEventListener('mouseleave', () => {
+            const letters = nameElement.querySelectorAll('span');
+            letters.forEach(letter => {
+                letter.style.transform = 'translateY(0) rotate(0deg)';
+            });
+        });
+    }
+}
+
+// Initialize all interactive features
+document.addEventListener('DOMContentLoaded', () => {
+    createInteractiveCursor();
+    createScrollIndicator();
+    enhanceSectionCards();
+    enhanceNameInteraction();
+    
+    // Add smooth scroll behavior
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
 });
 

@@ -798,6 +798,34 @@ section {
     background-color: transparent !important;
 }
 
+#about .container-fluid {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+#about .row {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+#about .col-lg-5, #about .col-lg-7, #about .col-lg-8 {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+/* Make about image containers transparent */
+#about .about-image-container {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+/* Make text content areas semi-transparent for readability */
+#about .text-content {
+    background: rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
 #about .row {
     background: transparent !important;
     background-color: transparent !important;
@@ -820,4 +848,322 @@ section {
     background: transparent !important;
     background-color: transparent !important;
     background-image: none !important;
+}
+
+/* Enhanced Hover Interactions for Portfolio */
+
+/* Name hover effect with 3D transformation */
+.display-3:hover {
+    transform: perspective(1000px) rotateX(15deg) rotateY(-15deg) scale(1.05);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-shadow: 
+        0 0 20px rgba(230, 255, 8, 0.8),
+        0 0 40px rgba(230, 255, 8, 0.6),
+        0 0 60px rgba(230, 255, 8, 0.4);
+    cursor: pointer;
+}
+
+/* Section cards hover effects */
+.service-box {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.service-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+        rgba(11, 206, 175, 0.1) 0%, 
+        rgba(230, 255, 8, 0.1) 50%, 
+        rgba(11, 206, 175, 0.1) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+}
+
+.service-box:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.3),
+        0 0 30px rgba(11, 206, 175, 0.3);
+    border-color: rgba(11, 206, 175, 0.5);
+}
+
+.service-box:hover::before {
+    opacity: 1;
+}
+
+.service-box:hover .d-flex {
+    transform: scale(1.1) rotate(360deg);
+    transition: transform 0.6s ease;
+}
+
+/* Button enhancements */
+.btn {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border-radius: 25px;
+    font-weight: 600;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.3), 
+        transparent);
+    transition: left 0.5s ease;
+}
+
+.btn:hover::before {
+    left: 100%;
+}
+
+.btn:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Navbar brand hover effect */
+.navbar-brand:hover h1 {
+    transform: perspective(1000px) rotateY(15deg);
+    transition: transform 0.3s ease;
+}
+
+/* Enhanced skill progress bars */
+.skill:hover .progress-bar {
+    background: linear-gradient(45deg, #0BCEAF, #e6ff08, #0BCEAF);
+    background-size: 400% 400%;
+    animation: gradientFlow 2s ease infinite;
+}
+
+@keyframes gradientFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Profile container enhanced hover */
+.profile-container:hover .profile-image {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 15px 35px rgba(11, 206, 175, 0.4);
+}
+
+.profile-container:hover .profile-glow {
+    animation: profilePulse 1s ease infinite;
+}
+
+@keyframes profilePulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.6;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.8;
+    }
+}
+
+/* Section title hover effects */
+.position-relative h1:hover {
+    transform: scale(1.02);
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+/* About section image container hover */
+.about-image-container {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.about-image-container:hover {
+    transform: perspective(1000px) rotateY(10deg) rotateX(5deg);
+}
+
+.about-image-container:hover .tech-badge {
+    transform: translateY(-5px) scale(1.1);
+    box-shadow: 0 5px 15px rgba(11, 206, 175, 0.4);
+}
+
+.tech-badge {
+    position: absolute;
+    background: rgba(11, 206, 175, 0.9);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.tech-badge:nth-child(1) {
+    top: 10px;
+    right: 10px;
+}
+
+.tech-badge:nth-child(2) {
+    top: 50px;
+    right: 10px;
+}
+
+.tech-badge:nth-child(3) {
+    top: 90px;
+    right: 10px;
+}
+
+/* Navigation links hover effect */
+.navbar-nav .nav-link {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.navbar-nav .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(45deg, #0BCEAF, #e6ff08);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.navbar-nav .nav-link:hover::after {
+    width: 100%;
+}
+
+.navbar-nav .nav-link:hover {
+    transform: translateY(-2px);
+    color: #0BCEAF !important;
+}
+
+/* Interactive cursor effects */
+.interactive-cursor {
+    position: fixed;
+    width: 20px;
+    height: 20px;
+    background: radial-gradient(circle, rgba(11, 206, 175, 0.8) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.1s ease;
+}
+
+/* Scroll indicator */
+.scroll-indicator {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, #0BCEAF, #e6ff08);
+    transform-origin: left;
+    transform: scaleX(0);
+    transition: transform 0.1s ease;
+    z-index: 1000;
+}
+
+/* Text content hover effects */
+.text-content p:hover {
+    transform: translateX(10px);
+    transition: transform 0.3s ease;
+    color: #0BCEAF !important;
+}
+
+/* Achievement highlight hover */
+.achievement-highlight:hover {
+    background: linear-gradient(45deg, rgba(11, 206, 175, 0.1), rgba(230, 255, 8, 0.1));
+    border-left: 4px solid #0BCEAF;
+    padding-left: 15px;
+    transition: all 0.3s ease;
+    transform: translateX(5px);
+}
+
+/* Performance and loading indicators */
+#threejs-performance {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    color: #0BCEAF;
+    padding: 10px;
+    border-radius: 5px;
+    font-family: monospace;
+    font-size: 12px;
+    z-index: 1000;
+    display: none;
+}
+
+#threejs-loader {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(11, 206, 175, 0.9);
+    color: white;
+    padding: 20px 30px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    z-index: 1000;
+    display: none;
+    animation: loaderPulse 2s infinite;
+}
+
+@keyframes loaderPulse {
+    0%, 100% { opacity: 0.8; transform: translate(-50%, -50%) scale(1); }
+    50% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+    .service-box:hover {
+        transform: translateY(-5px) scale(1.01);
+    }
+    
+    .display-3:hover {
+        transform: perspective(500px) rotateX(10deg) rotateY(-10deg) scale(1.02);
+    }
+    
+    .btn:hover {
+        transform: translateY(-2px) scale(1.02);
+    }
+    
+    .interactive-cursor {
+        display: none; /* Hide custom cursor on mobile */
+    }
+}
+
+/* Performance mode - reduced effects */
+.reduced-motion .service-box,
+.reduced-motion .btn,
+.reduced-motion .profile-container,
+.reduced-motion .display-3 {
+    transition: none !important;
+    transform: none !important;
+    animation: none !important;
+}
+
+.reduced-motion .service-box:hover,
+.reduced-motion .btn:hover,
+.reduced-motion .profile-container:hover,
+.reduced-motion .display-3:hover {
+    transform: none !important;
 }
