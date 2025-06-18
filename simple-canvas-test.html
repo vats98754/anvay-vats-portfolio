@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Canvas Test</title>
+    <style>
+        #test-canvas {
+            border: 10px solid red;
+            background: rgba(0, 255, 0, 0.3);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+        #info {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: black;
+            color: white;
+            padding: 10px;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="test-canvas"></canvas>
+    <div id="info">Simple Canvas Test - Green background with red border</div>
+    
+    <script src="lib/three/three.min.js"></script>
+    <script>
+        console.log('THREE available:', typeof THREE !== 'undefined');
+        
+        if (typeof THREE !== 'undefined') {
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const canvas = document.getElementById('test-canvas');
+            
+            const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            
+            // Create a simple red cube
+            const geometry = new THREE.BoxGeometry(2, 2, 2);
+            const material = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
+            const cube = new THREE.Mesh(geometry, material);
+            scene.add(cube);
+            
+            camera.position.z = 5;
+            
+            function animate() {
+                requestAnimationFrame(animate);
+                cube.rotation.x += 0.01;
+                cube.rotation.y += 0.01;
+                renderer.render(scene, camera);
+            }
+            
+            animate();
+            
+            document.getElementById('info').innerHTML = 'Three.js test: Red wireframe cube should be rotating';
+        } else {
+            document.getElementById('info').innerHTML = 'THREE.js not loaded!';
+        }
+    </script>
+</body>
+</html>

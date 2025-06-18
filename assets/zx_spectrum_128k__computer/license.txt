@@ -1,0 +1,11 @@
+Model Information:
+* title:	Zx Spectrum 128K || Computer
+* source:	https://sketchfab.com/3d-models/zx-spectrum-128k-computer-e9431d5bc4a84ff789b9553cbc3f9f3b
+* author:	dark_igorek (https://sketchfab.com/dark_igorek)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Zx Spectrum 128K || Computer" (https://sketchfab.com/3d-models/zx-spectrum-128k-computer-e9431d5bc4a84ff789b9553cbc3f9f3b) by dark_igorek (https://sketchfab.com/dark_igorek) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

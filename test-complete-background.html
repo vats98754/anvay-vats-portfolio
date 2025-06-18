@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Complete Background Test - Northern Lights & Stars</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+        
+        #threejs-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .info {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            color: white;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px;
+            border-radius: 8px;
+            max-width: 300px;
+            z-index: 1000;
+        }
+        
+        .status-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .status-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .fps-counter {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            color: #00ff00;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            z-index: 1000;
+        }
+        
+        .instructions {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            color: white;
+            background: rgba(0, 100, 150, 0.8);
+            padding: 15px;
+            border-radius: 8px;
+            max-width: 400px;
+            z-index: 1000;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="threejs-canvas"></canvas>
+    
+    <div class="info">
+        <h3>🌌 Background Test Status</h3>
+        <div class="status-grid">
+            <div class="status-item">
+                <strong>Canvas:</strong> <span id="canvas-status">Checking...</span>
+            </div>
+            <div class="status-item">
+                <strong>Three.js:</strong> <span id="threejs-status">Loading...</span>
+            </div>
+            <div class="status-item">
+                <strong>Renderer:</strong> <span id="renderer-status">Pending...</span>
+            </div>
+            <div class="status-item">
+                <strong>Stars:</strong> <span id="stars-status">Creating...</span>
+            </div>
+            <div class="status-item">
+                <strong>Aurora:</strong> <span id="aurora-status">Initializing...</span>
+            </div>
+            <div class="status-item">
+                <strong>Models:</strong> <span id="models-status">Loading...</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="fps-counter">
+        <div>FPS: <span id="fps">--</span></div>
+        <div>Objects: <span id="object-count">--</span></div>
+    </div>
+    
+    <div class="instructions">
+        <h4>Expected Visuals:</h4>
+        <ul>
+            <li>🌟 <strong>Twinkling Stars:</strong> Cross-shaped stars that sparkle</li>
+            <li>🌈 <strong>Northern Lights:</strong> Flowing aurora bands in multiple colors</li>
+            <li>🔴 <strong>Red Test Cube:</strong> Rotating wireframe cube for verification</li>
+            <li>🎭 <strong>GLTF Models:</strong> 3D objects revolving in the distance</li>
+            <li>🎨 <strong>Deep Blue Background:</strong> Space-like gradient</li>
+        </ul>
+        <p><strong>Move your mouse</strong> to interact with the camera!</p>
+    </div>
+
+    <!-- Three.js Library -->
+    <script src="lib/three/three.min.js"></script>
+    <script src="lib/three/GLTFLoader.js"></script>
+    <script src="js/debug-threejs.js"></script>
+    
+    <script>
+        // FPS Counter
+        let frameCount = 0;
+        let lastTime = Date.now();
+        
+        function updateFPS() {
+            frameCount++;
+            const currentTime = Date.now();
+            
+            if (currentTime - lastTime >= 1000) {
+                const fps = Math.round((frameCount * 1000) / (currentTime - lastTime));
+                document.getElementById('fps').textContent = fps;
+                frameCount = 0;
+                lastTime = currentTime;
+            }
+            
+            requestAnimationFrame(updateFPS);
+        }
+        updateFPS();
+        
+        // Update status functions
+        const updateStatus = (type, message, isSuccess = false) => {
+            const element = document.getElementById(`${type}-status`);
+            if (element) {
+                element.textContent = message;
+                element.style.color = isSuccess ? '#00ff00' : '#ffff00';
+            }
+        };
+        
+        // Load the complete Three.js implementation
+        const script = document.createElement('script');
+        script.onload = function() {
+            console.log('✅ Main.js loaded successfully');
+            updateStatus('threejs', 'Loaded ✅', true);
+        };
+        script.onerror = function() {
+            console.error('❌ Failed to load main.js');
+            updateStatus('threejs', 'Failed ❌');
+        };
+        script.src = 'js/main.js';
+        document.head.appendChild(script);
+        
+        // Monitor object count
+        setInterval(() => {
+            if (window.Portfolio3D && window.Portfolio3D.scene) {
+                document.getElementById('object-count').textContent = window.Portfolio3D.scene.children.length;
+            }
+        }, 1000);
+        
+        // Update status indicators as elements load
+        updateStatus('canvas', document.getElementById('threejs-canvas') ? 'Found ✅' : 'Missing ❌', 
+                    !!document.getElementById('threejs-canvas'));
+    </script>
+</body>
+</html>

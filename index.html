@@ -41,7 +41,8 @@
     <link href="css/style.css" rel="stylesheet">
 </head>
 
-<body data-spy="scroll" data-target=".navbar" data-offset="51">
+<body data-spy="scroll" data-target=".navbar" data-offset="51">    <!-- Three.js Animated Background Canvas -->    <canvas id="threejs-canvas"></canvas>
+
     <!-- Navbar Start -->
     <nav class="navbar fixed-top shadow-sm navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-lg-5">
         <a href="index.html" class="navbar-brand ml-lg-3">
@@ -72,35 +73,34 @@
     </nav>
     <!-- Navbar End -->
 
- 
-
-    <!-- Header Start -->
+     <!-- Header Start -->
     <div class="container-fluid bg-primary d-flex align-items-center mb-5 py-5" id="home" style="min-height: 100vh;">
         <div class="container">
             <div class="row align-items-center">
                
                 <div class="col-lg-7 text-center text-lg-left">
-                    <h3 class="text-white font-weight-normal mb-3">Hello, my name is</h3>
-                    <h1 class="display-3 text-uppercase text-primary mb-2" style="-webkit-text-stroke: 2px #e6ff08;">Anvay Vats</h1>
-                    <h1 class="typed-text-output d-inline font-weight-lighter text-white"></h1>
-                    <div class="typed-text d-none">Web Designer, Competitive Programmer, Web Developer, Mathematics Enthusiast, App Designer, App Developer</div>
-                    <div class="d-flex align-items-center justify-content-center justify-content-lg-start pt-5">
-                        <a href="https://docs.google.com/document/d/1zPWzhlqnyCgY4obbha1OXIctbgz-hsOj6cByc7IYFBo/edit?usp=sharing" class="btn btn-white mr-4">My Résumé</a>
+                    <h3 class="text-white font-weight-normal mb-3 fade-in-up">Hello, my name is</h3>
+                    <h1 class="display-3 text-uppercase text-primary mb-2 fade-in-up" style="-webkit-text-stroke: 2px #e6ff08; text-shadow: 0 0 30px rgba(230, 255, 8, 0.5);">Anvay Vats</h1>
+                    <h1 class="typed-text-output d-inline font-weight-lighter text-white fade-in-up"></h1>
+                    <div class="typed-text d-none">Machine Learning Engineer, Software Developer, Data Scientist, AI Researcher, Full Stack Developer, Competitive Programmer</div>
+                    <div class="d-flex align-items-center justify-content-center justify-content-lg-start pt-5 fade-in-up">
+                        <a href="https://docs.google.com/document/d/1zPWzhlqnyCgY4obbha1OXIctbgz-hsOj6cByc7IYFBo/edit?usp=sharing" class="btn btn-white mr-4 btn-glow">My Résumé</a>
                         
-                        <a href="https://github.com/vats98754" class="btn btn-blue d-none d-sm-block">Check out some of my projects</a>
+                        <a href="https://github.com/vats98754" class="btn btn-blue d-none d-sm-block btn-glow">Check out my projects</a>
                     </div>
                 </div>
-                <div class="col-lg-6 px-8 pl-lg-0 pb-5 pb-lg-4 about-img">
-                    <img class="img-fluid w-100 rounded-circle shadow-sm" src="img/anvay-vats-picture.jpg" alt="">
+                <div class="col-lg-5 px-8 pl-lg-0 pb-5 pb-lg-4 about-img">
+                    <div class="profile-container">
+                        <img class="img-fluid w-100 rounded-circle shadow-lg profile-image" src="img/profile.jpg" alt="Anvay Vats Profile">
+                        <div class="profile-glow"></div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     <!-- Header End -->
-
-
     <!-- About Start -->
-    <div class="container-fluid py-5" id="about">
+    <div class="container-fluid py-5" id="about" style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);">
         <div class="container">
             <div class="position-relative d-flex align-items-center justify-content-center">
                 <h1 class="display-1 text-uppercase text-white" style="-webkit-text-stroke: 1px #fce562;">Myself</h1>
@@ -108,41 +108,59 @@
             </div>
             <div class="row align-items-center">
                 <div class="col-lg-5 pb-4 pb-lg-0">
-                    <img class="img-fluid rounded w-100" src="img/profile.jpg" alt="">
+                    <div class="about-image-container">
+                        <img class="img-fluid rounded w-100 shadow-lg" src="img/profile.jpg" alt="Anvay Vats" style="border: 3px solid rgba(11, 206, 175, 0.3);">
+                        <div class="tech-overlay">
+                            <div class="tech-badge">AI/ML</div>
+                            <div class="tech-badge">Full Stack</div>
+                            <div class="tech-badge">Data Science</div>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-lg-7">
-                    <h3 class="mb-4">Math and Computer Science Enthusiast</h3>
-                    <p>I'm an avid learner and teacher of mathematics, computer science, and basically anything to do with logical 
-                        thinking and problem solving. Currently, I study at United World College of South East Asia, East Campus, 
-                        in Grade 12 (IBDP). I take Math Analysis and Approaches HL, Computer Science HL, Physics HL, Economics SL,
-                         English Language and Literature SL, and Spanish B SL. On my pursuit of Math and CS knowledge beyond what 
-                         my school offers, I self-studied (in 4 months, while school was going on, using just two books that I purchased)
-                         to take the A-Level exams for Further Mathematics (9231) in just Grade 11, achieving an <b>A* [PUM: 95]</b>. Furthermore,
-                        I also took the STEP II and III exams (an admissions test used as the entrance exam for mathematics at the University of Cambridge)
-                        in Grade 11, achieving very good grades.
-                         I have also explored several areas of technology and CS, such as Data Science - came naturally to me, as I'm 
-                         fond of both math (statistics) and CS - (AI - ML/Deep Learning), Competitive 
-                         Programming (CP), and Web Development (most of these I've put up on my GitHub, 
-                         so please check it out).
-</p><br><p>
-                         I use my mathematical and Competitive Programming skills to teach at the HS Computing Club (which I founded 
-                         and lead) and HS Competition Math Club (which I lead) at my institution - I've received various international accolades due 
-                         to my skills in competition mathematics, but I pride myself more on self-studying and teaching mathematical concepts.
-                    </p><br><p>
-                        My perseverance with these topics has lead me to not only create projects on them, but also to read deeper into them - I've read:
-                        <ul>
-                            <li><a href="https://www.cambridge.org/9781108403375">The Cambridge International AS & A Level Further Mathematics Coursebook</a> for the Further Mathematics exam I sat in G11, helping me achieve an <b>A* [PUM: 95]</b>,</li>
-                            <li><a href="https://en.wikipedia.org/wiki/Code:_The_Hidden_Language_of_Computer_Hardware_and_Software">Code: The Hidden Language of 
-                            Computer Hardware and Software by Charles Petzold</a>,</li>
-                            <li><a href="https://cses.fi/book/book.pdf">Competitive Programmer's Handbook by Antti Laaksonen</a>, the book that got me heavily involved in Competitive Programming,</li>
-                            <li><a href="https://linear.axler.net/">Linear Algebra Done Right (part of the Springer Undergraduate Mathematics Series)</a>,</li>
-                            <li><a href="https://www.cambridge.org/core/books/how-to-think-like-a-mathematician/FB0813C3AEDDECD40BE58AF186370D52"> How to Think Like a Mathematician: A Companion to Undergraduate Mathematics by Kevin Houston</a>,</li>
-                            <li>and others like <a href="https://www.course.fast.ai">Deep Learning for Coders with Fastai and PyTorch</a>, a companion to a thorough Deep Learning course offered by Fast.ai.</li>
+                    <h3 class="mb-4" style="color: #0BCEAF; font-weight: 600;">Math and Computer Science Enthusiast</h3>
+                    <div class="text-content">
+                        <p class="lead">I'm an avid learner and teacher of mathematics, computer science, and basically anything to do with logical 
+                            thinking and problem solving. Currently, I study at United World College of South East Asia, East Campus, 
+                            in Grade 12 (IBDP).</p>
+                        
+                        <div class="achievement-highlight">
+                            <h5>🏆 Academic Excellence</h5>
+                            <p>Self-studied and achieved <strong>A* [PUM: 95]</strong> in A-Level Further Mathematics (9231) in Grade 11, 
+                            plus strong performance in STEP II and III exams (Cambridge Mathematics entrance exams).</p>
+                        </div>
+                          <div class="skills-preview">
+                            <h5>💻 Technical Expertise</h5>
+                            <p>Experienced in Data Science, AI/ML, Deep Learning, Competitive Programming, and Full Stack Web Development. 
+                            Check out my projects on GitHub!</p>
+                        </div>
+                    </div>
+                    
+                    <p>I actively participate in and lead both my HS Math Club and HS Competition Math Club at my institution. I've received various international accolades due                    <p>I actively participate in and lead both my HS Math Club and HS Competition Math Club at my institution. I've received various international accolades due 
+                       to my skills in competition mathematics, but I pride myself more on self-studying and teaching mathematical concepts.</p>
+                    
+                    <div class="reading-highlights">
+                        <h5>📚 Self-Study Journey</h5>
+                        <p>My perseverance with these topics has led me to read extensively:</p>
+                        <ul class="book-list">
+                            <li><a href="https://www.cambridge.org/9781108403375" target="_blank">Cambridge A Level Further Mathematics Coursebook</a> - achieved <strong>A* [PUM: 95]</strong></li>
+                            <li><a href="https://en.wikipedia.org/wiki/Code:_The_Hidden_Language_of_Computer_Hardware_and_Software" target="_blank">Code: The Hidden Language of Computer Hardware and Software</a> by Charles Petzold</li>
+                            <li><a href="https://cses.fi/book/book.pdf" target="_blank">Competitive Programmer's Handbook</a> by Antti Laaksonen</li>
+                            <li><a href="https://linear.axler.net/" target="_blank">Linear Algebra Done Right</a> (Springer Undergraduate Mathematics Series)</li>
+                            <li><a href="https://www.cambridge.org/core/books/how-to-think-like-a-mathematician/FB0813C3AEDDECD40BE58AF186370D52" target="_blank">How to Think Like a Mathematician</a> by Kevin Houston</li>
+                            <li><a href="https://www.course.fast.ai" target="_blank">Deep Learning for Coders with Fastai and PyTorch</a></li>
                         </ul>
-                        Additionally, I have heavily contributed to open-source software and online communities, both big (creating software for pip) and small (contributing to Learney). I've created a Python module called <a herf="https://pypi.org/manage/project/stringtoiso/release/0.1/">stringtoiso</a>
-                        that aims to unify all International Organization for Standardization tokens into one, allowing you to convert from one to another; I've also heavily collaborated with and contributed to smaller, grassroots projects like <a href="">Learney</a>, a web application
-                        that allows students to understand the links between Mathematics, Computer Science, and Data Science, all of which, as I've mentioned, are my interests.
-                    </p>
+                    </div>
+                    
+                    <div class="opensource-contributions">
+                        <h5>🚀 Open Source Contributions</h5>
+                        <p>I actively contribute to open-source software and online communities:</p>
+                        <ul>
+                            <li>Created <a href="https://pypi.org/project/stringtoiso/" target="_blank"><strong>stringtoiso</strong></a> - A Python module for ISO token unification</li>
+                            <li>Contributed to <strong>Learney</strong> - A web application connecting Mathematics, Computer Science, and Data Science</li>
+                            <li>Various contributions to community projects and educational tools</li>
+                        </ul>
+                    </div>
                     <div class="row mb-3">
                         <div class="col-sm-6 py-2"><h6>Name: <span class="text-secondary">Anvay Vats</span></h6></div>
                         <div class="col-sm-6 py-2"><h6>Nationality: <span class="text-secondary">Indian (currently residing in Singapore, but have lived in Norway as well)</span></h6></div>
@@ -449,10 +467,10 @@
 
     <!-- Contact Javascript File -->
     <script src="mail/jqBootstrapValidation.min.js"></script>
-    <script src="mail/contact.js"></script>
-
-    <!-- Template Javascript -->
-    <script src="js/main.js"></script>
+    <script src="mail/contact.js"></script>    <!-- Three.js for 3D Background -->    <!-- Three.js Library -->
+    <script src="lib/three/three.min.js"></script>
+    <script src="lib/three/GLTFLoader.js"></script><!-- Template Javascript -->
+    <script src="js/main-gltf.js"></script>
 </body>
 
 </html>

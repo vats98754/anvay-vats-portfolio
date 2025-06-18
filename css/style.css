@@ -1,5 +1,3 @@
-
-
 *,
 *::before,
 *::after {
@@ -13,7 +11,147 @@ html {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
- 
+/* Three.js Canvas Background */
+#threejs-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1; /* Behind content */
+    opacity: 1;
+    pointer-events: none;
+    background: transparent; /* Let Three.js handle the background */
+}
+
+/* Make sure content appears above the 3D background with transparency */
+.navbar,
+.container-fluid,
+.container {
+    position: relative;
+    background: transparent !important;
+    z-index: 1;
+}
+
+/* Enhanced background gradient overlay - Made completely transparent */
+.bg-primary {
+    background: transparent !important;
+    backdrop-filter: none !important;
+}
+
+/* Profile Image Enhancements */
+.profile-container {
+    position: relative;
+    display: inline-block;
+}
+
+.profile-image {
+    transition: transform 0.3s ease;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.profile-image:hover {
+    transform: scale(1.05);
+}
+
+.profile-glow {
+    position: absolute;
+    top: -20px;
+    left: -20px;
+    right: -20px;
+    bottom: -20px;
+    background: radial-gradient(circle, rgba(11, 206, 175, 0.3) 0%, transparent 70%);
+    border-radius: 50%;
+    z-index: -1;
+    animation: pulse 2s infinite;
+}
+
+/* Button Enhancements */
+.btn-glow {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn-glow:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.btn-glow::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn-glow:hover::before {
+    left: 100%;
+}
+
+/* Fade-in Animations */
+.fade-in-up {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 1s ease forwards;
+}
+
+.fade-in-up:nth-child(1) { animation-delay: 0.1s; }
+.fade-in-up:nth-child(2) { animation-delay: 0.3s; }
+.fade-in-up:nth-child(3) { animation-delay: 0.5s; }
+.fade-in-up:nth-child(4) { animation-delay: 0.7s; }
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.6;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.3;
+    }
+}
+
+/* Enhanced Typography */
+.text-primary {
+    color: #e6ff08 !important;
+    filter: drop-shadow(0 0 10px rgba(230, 255, 8, 0.5));
+}
+
+/* Navbar Enhancements */
+.navbar {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.95) !important;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Remove background for Three.js northern lights */
+body {
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    background-size: initial !important;
+    animation: none !important;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
 
 body {
   margin: 0;
@@ -21,9 +159,11 @@ body {
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
-  color: #6c757d;
+  color: rgba(255, 255, 255, 0.9);
   text-align: left;
-  background-color: #ffffff;
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
 }
  
 a {
@@ -54,6 +194,33 @@ h1,h2,h3,h4,h5,h6,p{
 .btn {
   padding: 10px 25px;
   border-radius: 100px;
+}
+
+/* Additional transparency for northern lights integration */
+.btn {
+    background: rgba(13, 110, 253, 0.3) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    backdrop-filter: blur(5px);
+    color: white !important;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    background: rgba(13, 110, 253, 0.5) !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 255, 136, 0.3);
+}
+
+.btn-primary {
+    background: rgba(0, 255, 136, 0.3) !important; /* Northern lights green */
+    border: 1px solid rgba(0, 255, 136, 0.5) !important;
+}
+
+.btn-primary:hover {
+    background: rgba(0, 255, 136, 0.5) !important;
+    border: 1px solid rgba(0, 255, 136, 0.7) !important;
+    box-shadow: 0 5px 15px rgba(0, 255, 136, 0.4);
 }
 
 .btn-social {
@@ -217,7 +384,8 @@ h1,h2,h3,h4,h5,h6,p{
 
 }
 .testimonial-carousel .text-center h4{
-
+    color: #ffffff !important;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .testimonial-carousel .owl-dots {
@@ -278,4 +446,378 @@ h1,h2,h3,h4,h5,h6,p{
   100% {
     transform: translateY(-15px);
   }
+}
+
+/* About Section Enhancements */
+.about-image-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px;
+}
+
+.tech-overlay {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.tech-badge {
+    background: rgba(11, 206, 175, 0.9);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    animation: float 3s ease-in-out infinite;
+}
+
+.tech-badge:nth-child(1) { animation-delay: 0s; }
+.tech-badge:nth-child(2) { animation-delay: 1s; }
+.tech-badge:nth-child(3) { animation-delay: 2s; }
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); }
+}
+
+.achievement-highlight {
+    background: linear-gradient(135deg, rgba(11, 206, 175, 0.1) 0%, rgba(108, 117, 125, 0.1) 100%);
+    border-left: 4px solid #0BCEAF;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 10px;
+    backdrop-filter: blur(5px);
+}
+
+.achievement-highlight h5 {
+    color: #0BCEAF;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.achievement-highlight strong {
+    color: #e6ff08;
+    font-weight: 800;
+}
+
+.skills-preview {
+    background: linear-gradient(135deg, rgba(230, 255, 8, 0.1) 0%, rgba(11, 206, 175, 0.1) 100%);
+    border-left: 4px solid #e6ff08;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 10px;
+    backdrop-filter: blur(5px);
+}
+
+.skills-preview h5 {
+    color: #e6ff08;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.text-content {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 25px;
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    margin-bottom: 20px;
+}
+
+/* Reading Highlights and Open Source Sections */
+.reading-highlights,
+.opensource-contributions {
+    background: linear-gradient(135deg, rgba(108, 117, 125, 0.1) 0%, rgba(13, 110, 253, 0.1) 100%);
+    border-left: 4px solid #6c757d;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 10px;
+    backdrop-filter: blur(5px);
+}
+
+.reading-highlights h5,
+.opensource-contributions h5 {
+    color: #6c757d;
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.book-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.book-list li {
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(108, 117, 125, 0.2);
+    position: relative;
+    padding-left: 20px;
+}
+
+.book-list li::before {
+    content: "📖";
+    position: absolute;
+    left: 0;
+    top: 8px;
+}
+
+.book-list li:last-child {
+    border-bottom: none;
+}
+
+.book-list a,
+.opensource-contributions a {
+    color: #0BCEAF;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.book-list a:hover,
+.opensource-contributions a:hover {
+    color: #e6ff08;
+    text-decoration: underline;
+}
+
+.opensource-contributions ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.opensource-contributions li {
+    padding: 8px 0;
+    position: relative;
+    padding-left: 25px;
+}
+
+.opensource-contributions li::before {
+    content: "🔧";
+    position: absolute;
+    left: 0;
+    top: 8px;
+}
+
+/* Mobile Responsive Design */
+@media (max-width: 768px) {
+    #threejs-canvas {
+        opacity: 0.4; /* Reduce opacity on mobile for better readability */
+    }
+    
+    .tech-overlay {
+        position: static;
+        flex-direction: row;
+        justify-content: center;
+        margin-top: 15px;
+        flex-wrap: wrap;
+    }
+    
+    .tech-badge {
+        margin: 2px;
+    }
+    
+    .achievement-highlight,
+    .skills-preview {
+        padding: 15px;
+        margin: 15px 0;
+    }
+    
+    .text-content {
+        padding: 20px;
+    }
+    
+    .profile-glow {
+        display: none; /* Disable glow effect on mobile for performance */
+    }
+}
+
+@media (max-width: 576px) {
+    .display-3 {
+        font-size: 2.5rem !important;
+    }
+    
+    .tech-overlay {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .btn-glow {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+
+/* Performance optimizations */
+@media (prefers-reduced-motion: reduce) {
+    .fade-in-up,
+    .tech-badge,
+    .profile-glow,
+    .btn-glow::before {
+        animation: none !important;
+        transition: none !important;
+    }
+    
+    #threejs-canvas {
+        display: none; /* Hide 3D background for users who prefer reduced motion */
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .tech-badge {
+        background: #000;
+        color: #fff;
+        border: 2px solid #fff;
+    }
+    
+    .achievement-highlight,
+    .skills-preview {
+        background: rgba(255, 255, 255, 0.9);
+        color: #000;
+    }
+}
+
+/* Transparent frontend styles for northern lights background */
+body, html {
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+}
+
+.navbar, .navbar-light, .navbar-nav, .nav-item, .nav-link {
+    background: transparent !important;
+    background-color: transparent !important;
+    backdrop-filter: none !important;
+    border: none !important;
+}
+
+.container, .container-fluid, .row, .col {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+.card, .card-body, .card-header, .card-footer {
+    background: transparent !important;
+    background-color: transparent !important;
+    backdrop-filter: none !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.portfolio-item, .service-item, .blog-item {
+    background: transparent !important;
+    background-color: transparent !important;
+    backdrop-filter: none !important;
+}
+
+.btn-primary, .btn-secondary, .btn-outline-primary {
+    background: transparent !important;
+    background-color: transparent !important;
+    backdrop-filter: none !important;
+    border: 2px solid rgba(0, 255, 136, 0.6) !important;
+    color: rgba(0, 255, 136, 0.9) !important;
+}
+
+.btn-primary:hover, .btn-secondary:hover, .btn-outline-primary:hover {
+    background: rgba(0, 255, 136, 0.1) !important;
+    color: rgba(0, 255, 136, 1) !important;
+}
+
+/* Section backgrounds */
+section {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+/* Modal and popup elements */
+.modal-content, .modal-header, .modal-body, .modal-footer {
+    background: transparent !important;
+    background-color: transparent !important;
+    backdrop-filter: none !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Form elements */
+.form-control, .form-select, .form-check-input {
+    background: transparent !important;
+    background-color: transparent !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.form-control:focus, .form-select:focus {
+    background: transparent !important;
+    background-color: transparent !important;
+    border-color: rgba(0, 255, 136, 0.6) !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 255, 136, 0.25) !important;
+}
+
+/* Text and content areas */
+.text-primary {
+    color: rgba(0, 255, 136, 0.9) !important;
+}
+
+.bg-light, .bg-secondary, .bg-dark {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+/* Complete transparency overrides */
+.btn {
+    background: transparent !important;
+    border: 1px solid rgba(255, 255, 255, 0.8) !important;
+    color: white !important;
+}
+
+.btn:hover {
+    background: rgba(13, 110, 253, 0.2) !important;
+}
+
+.btn-primary {
+    background: transparent !important;
+    border: 2px solid rgba(0, 255, 136, 0.8) !important;
+}
+
+.btn-primary:hover {
+    background: rgba(0, 255, 136, 0.2) !important;
+}
+
+/* About Me Section - Complete Transparency */
+#about {
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+}
+
+#about .container {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+#about .row {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+#about .col-lg-8 {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+/* Ensure all section backgrounds are transparent */
+section {
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+}
+
+/* Service and portfolio sections */
+#service, #portfolio, #skill, #qualification, #testimonial, #blog, #contact {
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
 }
