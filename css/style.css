@@ -811,6 +811,12 @@ section {
 #about .col-lg-5, #about .col-lg-7, #about .col-lg-8 {
     background: transparent !important;
     background-color: transparent !important;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 
 /* Make about image containers transparent */
@@ -831,9 +837,11 @@ section {
     background-color: transparent !important;
 }
 
-#about .col-lg-8 {
+#about .col-lg-7, #about .col-lg-8 {
     background: transparent !important;
     background-color: transparent !important;
+    padding: 2rem 1rem;
+    text-align: center;
 }
 
 /* Ensure all section backgrounds are transparent */
@@ -1166,4 +1174,259 @@ section {
 .reduced-motion .profile-container:hover,
 .reduced-motion .display-3:hover {
     transform: none !important;
+}
+
+/* Beautiful Eye-Friendly Overlapping H1 Section Headers with Northern Lights */
+.position-relative.d-flex.align-items-center.justify-content-center {
+    cursor: default;
+    transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    padding: 3rem 0;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, 
+        rgba(0, 150, 136, 0.03) 0%, 
+        rgba(63, 81, 181, 0.05) 25%, 
+        rgba(156, 39, 176, 0.04) 50%, 
+        rgba(233, 30, 99, 0.03) 75%, 
+        rgba(255, 193, 7, 0.02) 100%);
+    border-radius: 20px;
+}
+
+.position-relative.d-flex.align-items-center.justify-content-center:hover {
+    transform: scale(1.01);
+    background: linear-gradient(135deg, 
+        rgba(0, 150, 136, 0.06) 0%, 
+        rgba(63, 81, 181, 0.08) 25%, 
+        rgba(156, 39, 176, 0.07) 50%, 
+        rgba(233, 30, 99, 0.06) 75%, 
+        rgba(255, 193, 7, 0.04) 100%);
+}
+
+/* Background stroke text with gentle northern lights gradient */
+.position-relative.d-flex .display-1.text-white {
+    background: linear-gradient(45deg, 
+        #64b5f6 0%,     /* Light blue */
+        #81c784 20%,    /* Light green */ 
+        #ffb74d 40%,    /* Light orange */
+        #f06292 60%,    /* Light pink */
+        #ba68c8 80%,    /* Light purple */
+        #64b5f6 100%    /* Back to light blue */
+    ) !important;
+    background-size: 300% 300% !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    animation: gentleAurora 8s ease-in-out infinite !important;
+    filter: drop-shadow(0 0 8px rgba(100, 181, 246, 0.3)) 
+            drop-shadow(0 0 16px rgba(129, 199, 132, 0.2)) !important;
+    transition: all 0.6s ease !important;
+    position: relative !important;
+    z-index: 1 !important;
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.1) !important;
+}
+
+.position-relative.d-flex .display-1.text-white:hover {
+    background-size: 400% 400% !important;
+    animation-duration: 4s !important;
+    filter: drop-shadow(0 0 15px rgba(100, 181, 246, 0.5)) 
+            drop-shadow(0 0 25px rgba(129, 199, 132, 0.4))
+            drop-shadow(0 0 35px rgba(255, 183, 77, 0.3)) !important;
+    transform: scale(1.02) !important;
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Foreground primary text with vibrant but gentle gradient */
+.position-relative.d-flex .position-absolute.text-primary {
+    background: linear-gradient(135deg, 
+        #00bcd4 0%,     /* Cyan */
+        #4caf50 15%,    /* Green */
+        #ff9800 30%,   /* Orange */
+        #e91e63 45%,   /* Pink */
+        #9c27b0 60%,   /* Purple */
+        #3f51b5 75%,   /* Indigo */
+        #00bcd4 100%   /* Back to cyan */
+    ) !important;
+    background-size: 400% 400% !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    animation: vibrantFlow 6s ease-in-out infinite !important;
+    filter: drop-shadow(0 0 12px rgba(0, 188, 212, 0.4)) 
+            drop-shadow(0 0 20px rgba(76, 175, 80, 0.3)) 
+            drop-shadow(0 0 28px rgba(255, 152, 0, 0.2)) !important;
+    transition: all 0.4s ease !important;
+    position: relative !important;
+    z-index: 2 !important;
+}
+
+.container-fluid .position-relative.d-flex .display-1.text-white,
+.container .position-relative.d-flex .display-1.text-white,
+div.position-relative.d-flex .display-1.text-white.text-uppercase {
+    background: linear-gradient(45deg, 
+        #64b5f6 0%,     /* Light blue */
+        #81c784 20%,    /* Light green */ 
+        #ffb74d 40%,    /* Light orange */
+        #f06292 60%,    /* Light pink */
+        #ba68c8 80%,    /* Light purple */
+        #64b5f6 100%    /* Back to light blue */
+    ) !important;
+    background-size: 300% 300% !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    color: transparent !important;
+    -webkit-text-stroke: none !important;
+    animation: gentleAurora 8s ease-in-out infinite !important;
+    filter: drop-shadow(0 0 8px rgba(100, 181, 246, 0.3)) 
+            drop-shadow(0 0 16px rgba(129, 199, 132, 0.2)) !important;
+    transition: all 0.6s ease !important;
+    position: relative !important;
+    z-index: 2 !important;
+}
+
+.container-fluid .position-relative.d-flex .position-absolute.text-primary,
+.container .position-relative.d-flex .position-absolute.text-primary,
+div.position-relative.d-flex .position-absolute.text-primary.text-uppercase {
+    background: linear-gradient(135deg, 
+        #00bcd4 0%,     /* Cyan */
+        #4caf50 15%,    /* Green */
+        #ff9800 30%,   /* Orange */
+        #e91e63 45%,   /* Pink */
+        #9c27b0 60%,   /* Purple */
+        #3f51b5 75%,   /* Indigo */
+        #00bcd4 100%   /* Back to cyan */
+    ) !important;
+    background-size: 400% 400% !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    color: transparent !important;
+    animation: vibrantFlow 6s ease-in-out infinite !important;
+    filter: drop-shadow(0 0 12px rgba(0, 188, 212, 0.4)) 
+            drop-shadow(0 0 20px rgba(76, 175, 80, 0.3)) 
+            drop-shadow(0 0 28px rgba(255, 152, 0, 0.2)) !important;
+    transition: all 0.4s ease !important;
+    position: relative !important;
+    z-index: 3 !important;
+}
+
+/* Apply vibrant northern lights gradient to background text */
+.position-relative.d-flex .display-1.text-white {
+    background: linear-gradient(45deg, 
+        #64b5f6 0%,     /* Light blue */
+        #81c784 20%,    /* Light green */ 
+        #ffb74d 40%,    /* Light orange */
+        #f06292 60%,    /* Light pink */
+        #ba68c8 80%,    /* Light purple */
+        #64b5f6 100%    /* Back to light blue */
+    ) !important;
+    background-size: 300% 300% !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    color: transparent !important;
+    animation: gentleAurora 8s ease-in-out infinite !important;
+    filter: drop-shadow(0 0 8px rgba(100, 181, 246, 0.3)) 
+            drop-shadow(0 0 16px rgba(129, 199, 132, 0.2)) !important;
+    transition: all 0.6s ease !important;
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+/* Apply vibrant gradient to foreground text */
+.position-relative.d-flex .position-absolute.text-primary {
+    background: linear-gradient(135deg, 
+        #00bcd4 0%,     /* Cyan */
+        #4caf50 15%,    /* Green */
+        #ff9800 30%,   /* Orange */
+        #e91e63 45%,   /* Pink */
+        #9c27b0 60%,   /* Purple */
+        #3f51b5 75%,   /* Indigo */
+        #00bcd4 100%   /* Back to cyan */
+    ) !important;
+    background-size: 400% 400% !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    color: transparent !important;
+    animation: vibrantFlow 6s ease-in-out infinite !important;
+    filter: drop-shadow(0 0 12px rgba(0, 188, 212, 0.4)) 
+            drop-shadow(0 0 20px rgba(76, 175, 80, 0.3)) 
+            drop-shadow(0 0 28px rgba(255, 152, 0, 0.2)) !important;
+    transition: all 0.4s ease !important;
+    position: relative !important;
+    z-index: 2 !important;
+}
+
+/* Fallback for browsers that don't support background-clip: text */
+@supports not (-webkit-background-clip: text) {
+    .position-relative.d-flex .display-1.text-white {
+        color: #64b5f6 !important;
+        text-shadow: 0 0 20px rgba(100, 181, 246, 0.6), 
+                     0 0 40px rgba(129, 199, 132, 0.4) !important;
+    }
+    
+    .position-relative.d-flex .position-absolute.text-primary {
+        color: #00bcd4 !important;
+        text-shadow: 0 0 20px rgba(0, 188, 212, 0.6), 
+                     0 0 40px rgba(76, 175, 80, 0.4) !important;
+    }
+}
+
+/* Ensure webkit prefixes work on Safari */
+.position-relative.d-flex .display-1.text-white,
+.position-relative.d-flex .position-absolute.text-primary {
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-attachment: fixed;
+}
+
+/* FINAL: Complete gradient styles for H1 headers - all consolidated */
+
+/* MASTER GRADIENT RULES - Override everything */
+h1.display-1.text-uppercase.text-white {
+    background: linear-gradient(45deg, 
+        #ff6b6b 0%,     /* Coral red */
+        #4ecdc4 25%,    /* Turquoise */
+        #45b7d1 50%,    /* Sky blue */
+        #f093fb 75%,    /* Light purple */
+        #ff6b6b 100%    /* Back to coral */
+    ) !important;
+    background-size: 400% 400% !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    color: transparent !important;
+    animation: rainbowShift 4s ease-in-out infinite !important;
+    text-shadow: none !important;
+    -webkit-text-stroke: none !important;
+}
+
+h1.position-absolute.text-uppercase.text-primary {
+    background: linear-gradient(135deg, 
+        #ff9a9e 0%,     /* Light pink */
+        #fecfef 25%,    /* Lavender */
+        #fecfef 50%,    /* Lavender */
+        #ff9a9e 75%,    /* Light pink */
+        #ff9a9e 100%    /* Light pink */
+    ) !important;
+    background-size: 400% 400% !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    color: transparent !important;
+    animation: softFlow 3s ease-in-out infinite !important;
+}
+
+@keyframes rainbowShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes softFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }

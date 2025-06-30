@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module Test</title>
+</head>
+<body>
+    <h1>Module Test</h1>
+    <p>Check the console for module loading results.</p>
+    
+    <script type="module">
+        console.log('Starting module tests...');
+        
+        try {
+            const { UIHandler } = await import('./dist/ui/UIHandler.js');
+            console.log('✓ UIHandler loaded successfully:', UIHandler);
+        } catch (error) {
+            console.error('✗ Failed to load UIHandler:', error);
+        }
+        
+        try {
+            const { Utils } = await import('./dist/utils/Utils.js');
+            console.log('✓ Utils loaded successfully:', Utils);
+        } catch (error) {
+            console.error('✗ Failed to load Utils:', error);
+        }
+        
+        try {
+            const { SceneManager } = await import('./dist/scene/SceneManager.js');
+            console.log('✓ SceneManager loaded successfully:', SceneManager);
+        } catch (error) {
+            console.error('✗ Failed to load SceneManager:', error);
+        }
+        
+        try {
+            const { PortfolioApp } = await import('./dist/main.js');
+            console.log('✓ PortfolioApp loaded successfully:', PortfolioApp);
+        } catch (error) {
+            console.error('✗ Failed to load PortfolioApp:', error);
+        }
+    </script>
+</body>
+</html>
