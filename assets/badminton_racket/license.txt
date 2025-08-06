@@ -1,0 +1,11 @@
+Model Information:
+* title:	badminton racket
+* source:	https://sketchfab.com/3d-models/badminton-racket-455a5ed487e7450b8a52f39897193ddf
+* author:	timtime (https://sketchfab.com/timislav)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "badminton racket" (https://sketchfab.com/3d-models/badminton-racket-455a5ed487e7450b8a52f39897193ddf) by timtime (https://sketchfab.com/timislav) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

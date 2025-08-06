@@ -1,0 +1,31 @@
+{
+  "name": "anvay-vats-portfolio",
+  "version": "1.0.0",
+  "description": "Modern portfolio website with Three.js animations",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "clean": "rm -rf dist",
+    "rebuild": "npm run clean && npm run build",
+    "dev": "tsc --watch"
+  },
+  "devDependencies": {
+    "@types/jquery": "^3.5.32",
+    "@types/three": "^0.158.3",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "three": "^0.158.0"
+  },
+  "keywords": [
+    "portfolio",
+    "threejs",
+    "typescript",
+    "3d",
+    "web",
+    "interactive"
+  ],
+  "author": "Anvay Vats",
+  "license": "MIT"
+}

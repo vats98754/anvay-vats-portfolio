@@ -1,5 +1,3 @@
-
-
 *,
 *::before,
 *::after {
@@ -13,7 +11,147 @@ html {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
- 
+/* Three.js Canvas Background */
+#threejs-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1; /* Behind content */
+    opacity: 1;
+    pointer-events: none;
+    background: transparent; /* Let Three.js handle the background */
+}
+
+/* Make sure content appears above the 3D background with transparency */
+.navbar,
+.container-fluid,
+.container {
+    position: relative;
+    background: transparent !important;
+    z-index: 1;
+}
+
+/* Enhanced background gradient overlay - Made completely transparent */
+.bg-primary {
+    background: transparent !important;
+    backdrop-filter: none !important;
+}
+
+/* Profile Image Enhancements */
+.profile-container {
+    position: relative;
+    display: inline-block;
+}
+
+.profile-image {
+    transition: transform 0.3s ease;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.profile-image:hover {
+    transform: scale(1.05);
+}
+
+.profile-glow {
+    position: absolute;
+    top: -20px;
+    left: -20px;
+    right: -20px;
+    bottom: -20px;
+    background: radial-gradient(circle, rgba(11, 206, 175, 0.3) 0%, transparent 70%);
+    border-radius: 50%;
+    z-index: -1;
+    animation: pulse 2s infinite;
+}
+
+/* Button Enhancements */
+.btn-glow {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn-glow:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.btn-glow::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn-glow:hover::before {
+    left: 100%;
+}
+
+/* Fade-in Animations */
+.fade-in-up {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 1s ease forwards;
+}
+
+.fade-in-up:nth-child(1) { animation-delay: 0.1s; }
+.fade-in-up:nth-child(2) { animation-delay: 0.3s; }
+.fade-in-up:nth-child(3) { animation-delay: 0.5s; }
+.fade-in-up:nth-child(4) { animation-delay: 0.7s; }
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.6;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.3;
+    }
+}
+
+/* Enhanced Typography */
+.text-primary {
+    color: #e6ff08 !important;
+    filter: drop-shadow(0 0 10px rgba(230, 255, 8, 0.5));
+}
+
+/* Navbar Enhancements */
+.navbar {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.95) !important;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Remove background for Three.js northern lights */
+body {
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    background-size: initial !important;
+    animation: none !important;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
 
 body {
   margin: 0;
@@ -21,9 +159,11 @@ body {
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
-  color: #6c757d;
+  color: rgba(255, 255, 255, 0.9);
   text-align: left;
-  background-color: #ffffff;
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
 }
  
 a {
@@ -54,6 +194,33 @@ h1,h2,h3,h4,h5,h6,p{
 .btn {
   padding: 10px 25px;
   border-radius: 100px;
+}
+
+/* Additional transparency for northern lights integration */
+.btn {
+    background: rgba(13, 110, 253, 0.3) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    backdrop-filter: blur(5px);
+    color: white !important;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    background: rgba(13, 110, 253, 0.5) !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 255, 136, 0.3);
+}
+
+.btn-primary {
+    background: rgba(0, 255, 136, 0.3) !important; /* Northern lights green */
+    border: 1px solid rgba(0, 255, 136, 0.5) !important;
+}
+
+.btn-primary:hover {
+    background: rgba(0, 255, 136, 0.5) !important;
+    border: 1px solid rgba(0, 255, 136, 0.7) !important;
+    box-shadow: 0 5px 15px rgba(0, 255, 136, 0.4);
 }
 
 .btn-social {
@@ -217,7 +384,8 @@ h1,h2,h3,h4,h5,h6,p{
 
 }
 .testimonial-carousel .text-center h4{
-
+    color: #ffffff !important;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .testimonial-carousel .owl-dots {
@@ -278,4 +446,987 @@ h1,h2,h3,h4,h5,h6,p{
   100% {
     transform: translateY(-15px);
   }
+}
+
+/* About Section Enhancements */
+.about-image-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px;
+}
+
+.tech-overlay {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.tech-badge {
+    background: rgba(11, 206, 175, 0.9);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    animation: float 3s ease-in-out infinite;
+}
+
+.tech-badge:nth-child(1) { animation-delay: 0s; }
+.tech-badge:nth-child(2) { animation-delay: 1s; }
+.tech-badge:nth-child(3) { animation-delay: 2s; }
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); }
+}
+
+.achievement-highlight {
+    background: linear-gradient(135deg, rgba(11, 206, 175, 0.1) 0%, rgba(108, 117, 125, 0.1) 100%);
+    border-left: 4px solid #0BCEAF;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 10px;
+    backdrop-filter: blur(5px);
+}
+
+.achievement-highlight h5 {
+    color: #0BCEAF;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.achievement-highlight strong {
+    color: #e6ff08;
+    font-weight: 800;
+}
+
+.skills-preview {
+    background: linear-gradient(135deg, rgba(230, 255, 8, 0.1) 0%, rgba(11, 206, 175, 0.1) 100%);
+    border-left: 4px solid #e6ff08;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 10px;
+    backdrop-filter: blur(5px);
+}
+
+.skills-preview h5 {
+    color: #e6ff08;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.text-content {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 25px;
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    margin-bottom: 20px;
+}
+
+/* Reading Highlights and Open Source Sections */
+.reading-highlights,
+.opensource-contributions {
+    background: linear-gradient(135deg, rgba(108, 117, 125, 0.1) 0%, rgba(13, 110, 253, 0.1) 100%);
+    border-left: 4px solid #6c757d;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 10px;
+    backdrop-filter: blur(5px);
+}
+
+.reading-highlights h5,
+.opensource-contributions h5 {
+    color: #6c757d;
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.book-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.book-list li {
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(108, 117, 125, 0.2);
+    position: relative;
+    padding-left: 20px;
+}
+
+.book-list li::before {
+    content: "📖";
+    position: absolute;
+    left: 0;
+    top: 8px;
+}
+
+.book-list li:last-child {
+    border-bottom: none;
+}
+
+.book-list a,
+.opensource-contributions a {
+    color: #0BCEAF;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.book-list a:hover,
+.opensource-contributions a:hover {
+    color: #e6ff08;
+    text-decoration: underline;
+}
+
+.opensource-contributions ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.opensource-contributions li {
+    padding: 8px 0;
+    position: relative;
+    padding-left: 25px;
+}
+
+.opensource-contributions li::before {
+    content: "🔧";
+    position: absolute;
+    left: 0;
+    top: 8px;
+}
+
+/* Mobile Responsive Design */
+@media (max-width: 768px) {
+    #threejs-canvas {
+        opacity: 0.4; /* Reduce opacity on mobile for better readability */
+    }
+    
+    .tech-overlay {
+        position: static;
+        flex-direction: row;
+        justify-content: center;
+        margin-top: 15px;
+        flex-wrap: wrap;
+    }
+    
+    .tech-badge {
+        margin: 2px;
+    }
+    
+    .achievement-highlight,
+    .skills-preview {
+        padding: 15px;
+        margin: 15px 0;
+    }
+    
+    .text-content {
+        padding: 20px;
+    }
+    
+    .profile-glow {
+        display: none; /* Disable glow effect on mobile for performance */
+    }
+}
+
+@media (max-width: 576px) {
+    .display-3 {
+        font-size: 2.5rem !important;
+    }
+    
+    .tech-overlay {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .btn-glow {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+
+/* Performance optimizations */
+@media (prefers-reduced-motion: reduce) {
+    .fade-in-up,
+    .tech-badge,
+    .profile-glow,
+    .btn-glow::before {
+        animation: none !important;
+        transition: none !important;
+    }
+    
+    #threejs-canvas {
+        display: none; /* Hide 3D background for users who prefer reduced motion */
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .tech-badge {
+        background: #000;
+        color: #fff;
+        border: 2px solid #fff;
+    }
+    
+    .achievement-highlight,
+    .skills-preview {
+        background: rgba(255, 255, 255, 0.9);
+        color: #000;
+    }
+}
+
+/* Transparent frontend styles for northern lights background */
+body, html {
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+}
+
+.navbar, .navbar-light, .navbar-nav, .nav-item, .nav-link {
+    background: transparent !important;
+    background-color: transparent !important;
+    backdrop-filter: none !important;
+    border: none !important;
+}
+
+.container, .container-fluid, .row, .col {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+.card, .card-body, .card-header, .card-footer {
+    background: transparent !important;
+    background-color: transparent !important;
+    backdrop-filter: none !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.portfolio-item, .service-item, .blog-item {
+    background: transparent !important;
+    background-color: transparent !important;
+    backdrop-filter: none !important;
+}
+
+.btn-primary, .btn-secondary, .btn-outline-primary {
+    background: transparent !important;
+    background-color: transparent !important;
+    backdrop-filter: none !important;
+    border: 2px solid rgba(0, 255, 136, 0.6) !important;
+    color: rgba(0, 255, 136, 0.9) !important;
+}
+
+.btn-primary:hover, .btn-secondary:hover, .btn-outline-primary:hover {
+    background: rgba(0, 255, 136, 0.1) !important;
+    color: rgba(0, 255, 136, 1) !important;
+}
+
+/* Section backgrounds */
+section {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+/* Modal and popup elements */
+.modal-content, .modal-header, .modal-body, .modal-footer {
+    background: transparent !important;
+    background-color: transparent !important;
+    backdrop-filter: none !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Form elements */
+.form-control, .form-select, .form-check-input {
+    background: transparent !important;
+    background-color: transparent !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.form-control:focus, .form-select:focus {
+    background: transparent !important;
+    background-color: transparent !important;
+    border-color: rgba(0, 255, 136, 0.6) !important;
+    box-shadow: 0 0 0 0.2rem rgba(0, 255, 136, 0.25) !important;
+}
+
+/* Text and content areas */
+.text-primary {
+    color: rgba(0, 255, 136, 0.9) !important;
+}
+
+.bg-light, .bg-secondary, .bg-dark {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+/* Complete transparency overrides */
+.btn {
+    background: transparent !important;
+    border: 1px solid rgba(255, 255, 255, 0.8) !important;
+    color: white !important;
+}
+
+.btn:hover {
+    background: rgba(13, 110, 253, 0.2) !important;
+}
+
+.btn-primary {
+    background: transparent !important;
+    border: 2px solid rgba(0, 255, 136, 0.8) !important;
+}
+
+.btn-primary:hover {
+    background: rgba(0, 255, 136, 0.2) !important;
+}
+
+/* About Me Section - Complete Transparency */
+#about {
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+}
+
+#about .container {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+#about .container-fluid {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+#about .row {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+#about .col-lg-5, #about .col-lg-7, #about .col-lg-8 {
+    background: transparent !important;
+    background-color: transparent !important;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+/* Make about image containers transparent */
+#about .about-image-container {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+/* Make text content areas semi-transparent for readability */
+#about .text-content {
+    background: rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+#about .row {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+#about .col-lg-7, #about .col-lg-8 {
+    background: transparent !important;
+    background-color: transparent !important;
+    padding: 2rem 1rem;
+    text-align: center;
+}
+
+/* Ensure all section backgrounds are transparent */
+section {
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+}
+
+/* Service and portfolio sections */
+#service, #portfolio, #skill, #qualification, #testimonial, #blog, #contact {
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+}
+
+/* Enhanced Hover Interactions for Portfolio */
+
+/* Name hover effect with 3D transformation */
+.display-3:hover {
+    transform: perspective(1000px) rotateX(15deg) rotateY(-15deg) scale(1.05);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-shadow: 
+        0 0 20px rgba(230, 255, 8, 0.8),
+        0 0 40px rgba(230, 255, 8, 0.6),
+        0 0 60px rgba(230, 255, 8, 0.4);
+    cursor: pointer;
+}
+
+/* Section cards hover effects */
+.service-box {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.service-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, 
+        rgba(11, 206, 175, 0.1) 0%, 
+        rgba(230, 255, 8, 0.1) 50%, 
+        rgba(11, 206, 175, 0.1) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+}
+
+.service-box:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.3),
+        0 0 30px rgba(11, 206, 175, 0.3);
+    border-color: rgba(11, 206, 175, 0.5);
+}
+
+.service-box:hover::before {
+    opacity: 1;
+}
+
+.service-box:hover .d-flex {
+    transform: scale(1.1) rotate(360deg);
+    transition: transform 0.6s ease;
+}
+
+/* Button enhancements */
+.btn {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border-radius: 25px;
+    font-weight: 600;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.3), 
+        transparent);
+    transition: left 0.5s ease;
+}
+
+.btn:hover::before {
+    left: 100%;
+}
+
+.btn:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Navbar brand hover effect */
+.navbar-brand:hover h1 {
+    transform: perspective(1000px) rotateY(15deg);
+    transition: transform 0.3s ease;
+}
+
+/* Enhanced skill progress bars */
+.skill:hover .progress-bar {
+    background: linear-gradient(45deg, #0BCEAF, #e6ff08, #0BCEAF);
+    background-size: 400% 400%;
+    animation: gradientFlow 2s ease infinite;
+}
+
+@keyframes gradientFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Profile container enhanced hover */
+.profile-container:hover .profile-image {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 15px 35px rgba(11, 206, 175, 0.4);
+}
+
+.profile-container:hover .profile-glow {
+    animation: profilePulse 1s ease infinite;
+}
+
+@keyframes profilePulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.6;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.8;
+    }
+}
+
+/* Section title hover effects */
+.position-relative h1:hover {
+    transform: scale(1.02);
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+/* About section image container hover */
+.about-image-container {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.about-image-container:hover {
+    transform: perspective(1000px) rotateY(10deg) rotateX(5deg);
+}
+
+.about-image-container:hover .tech-badge {
+    transform: translateY(-5px) scale(1.1);
+    box-shadow: 0 5px 15px rgba(11, 206, 175, 0.4);
+}
+
+.tech-badge {
+    position: absolute;
+    background: rgba(11, 206, 175, 0.9);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.tech-badge:nth-child(1) {
+    top: 10px;
+    right: 10px;
+}
+
+.tech-badge:nth-child(2) {
+    top: 50px;
+    right: 10px;
+}
+
+.tech-badge:nth-child(3) {
+    top: 90px;
+    right: 10px;
+}
+
+/* Navigation links hover effect */
+.navbar-nav .nav-link {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.navbar-nav .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(45deg, #0BCEAF, #e6ff08);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+.navbar-nav .nav-link:hover::after {
+    width: 100%;
+}
+
+.navbar-nav .nav-link:hover {
+    transform: translateY(-2px);
+    color: #0BCEAF !important;
+}
+
+/* Interactive cursor effects */
+.interactive-cursor {
+    position: fixed;
+    width: 20px;
+    height: 20px;
+    background: radial-gradient(circle, rgba(11, 206, 175, 0.8) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.1s ease;
+}
+
+/* Scroll indicator */
+.scroll-indicator {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, #0BCEAF, #e6ff08);
+    transform-origin: left;
+    transform: scaleX(0);
+    transition: transform 0.1s ease;
+    z-index: 1000;
+}
+
+/* Text content hover effects */
+.text-content p:hover {
+    transform: translateX(10px);
+    transition: transform 0.3s ease;
+    color: #0BCEAF !important;
+}
+
+/* Achievement highlight hover */
+.achievement-highlight:hover {
+    background: linear-gradient(45deg, rgba(11, 206, 175, 0.1), rgba(230, 255, 8, 0.1));
+    border-left: 4px solid #0BCEAF;
+    padding-left: 15px;
+    transition: all 0.3s ease;
+    transform: translateX(5px);
+}
+
+/* Performance and loading indicators */
+#threejs-performance {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    color: #0BCEAF;
+    padding: 10px;
+    border-radius: 5px;
+    font-family: monospace;
+    font-size: 12px;
+    z-index: 1000;
+    display: none;
+}
+
+#threejs-loader {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(11, 206, 175, 0.9);
+    color: white;
+    padding: 20px 30px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    z-index: 1000;
+    display: none;
+    animation: loaderPulse 2s infinite;
+}
+
+@keyframes loaderPulse {
+    0%, 100% { opacity: 0.8; transform: translate(-50%, -50%) scale(1); }
+    50% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+    .service-box:hover {
+        transform: translateY(-5px) scale(1.01);
+    }
+    
+    .display-3:hover {
+        transform: perspective(500px) rotateX(10deg) rotateY(-10deg) scale(1.02);
+    }
+    
+    .btn:hover {
+        transform: translateY(-2px) scale(1.02);
+    }
+    
+    .interactive-cursor {
+        display: none; /* Hide custom cursor on mobile */
+    }
+}
+
+/* Performance mode - reduced effects */
+.reduced-motion .service-box,
+.reduced-motion .btn,
+.reduced-motion .profile-container,
+.reduced-motion .display-3 {
+    transition: none !important;
+    transform: none !important;
+    animation: none !important;
+}
+
+.reduced-motion .service-box:hover,
+.reduced-motion .btn:hover,
+.reduced-motion .profile-container:hover,
+.reduced-motion .display-3:hover {
+    transform: none !important;
+}
+
+/* Beautiful Eye-Friendly Overlapping H1 Section Headers with Northern Lights */
+.position-relative.d-flex.align-items-center.justify-content-center {
+    cursor: default;
+    transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    padding: 3rem 0;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, 
+        rgba(0, 150, 136, 0.03) 0%, 
+        rgba(63, 81, 181, 0.05) 25%, 
+        rgba(156, 39, 176, 0.04) 50%, 
+        rgba(233, 30, 99, 0.03) 75%, 
+        rgba(255, 193, 7, 0.02) 100%);
+    border-radius: 20px;
+}
+
+.position-relative.d-flex.align-items-center.justify-content-center:hover {
+    transform: scale(1.01);
+    background: linear-gradient(135deg, 
+        rgba(0, 150, 136, 0.06) 0%, 
+        rgba(63, 81, 181, 0.08) 25%, 
+        rgba(156, 39, 176, 0.07) 50%, 
+        rgba(233, 30, 99, 0.06) 75%, 
+        rgba(255, 193, 7, 0.04) 100%);
+}
+
+/* Background stroke text with gentle northern lights gradient */
+.position-relative.d-flex .display-1.text-white {
+    background: linear-gradient(45deg, 
+        #64b5f6 0%,     /* Light blue */
+        #81c784 20%,    /* Light green */ 
+        #ffb74d 40%,    /* Light orange */
+        #f06292 60%,    /* Light pink */
+        #ba68c8 80%,    /* Light purple */
+        #64b5f6 100%    /* Back to light blue */
+    ) !important;
+    background-size: 300% 300% !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    animation: gentleAurora 8s ease-in-out infinite !important;
+    filter: drop-shadow(0 0 8px rgba(100, 181, 246, 0.3)) 
+            drop-shadow(0 0 16px rgba(129, 199, 132, 0.2)) !important;
+    transition: all 0.6s ease !important;
+    position: relative !important;
+    z-index: 1 !important;
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.1) !important;
+}
+
+.position-relative.d-flex .display-1.text-white:hover {
+    background-size: 400% 400% !important;
+    animation-duration: 4s !important;
+    filter: drop-shadow(0 0 15px rgba(100, 181, 246, 0.5)) 
+            drop-shadow(0 0 25px rgba(129, 199, 132, 0.4))
+            drop-shadow(0 0 35px rgba(255, 183, 77, 0.3)) !important;
+    transform: scale(1.02) !important;
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Foreground primary text with vibrant but gentle gradient */
+.position-relative.d-flex .position-absolute.text-primary {
+    background: linear-gradient(135deg, 
+        #00bcd4 0%,     /* Cyan */
+        #4caf50 15%,    /* Green */
+        #ff9800 30%,   /* Orange */
+        #e91e63 45%,   /* Pink */
+        #9c27b0 60%,   /* Purple */
+        #3f51b5 75%,   /* Indigo */
+        #00bcd4 100%   /* Back to cyan */
+    ) !important;
+    background-size: 400% 400% !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    animation: vibrantFlow 6s ease-in-out infinite !important;
+    filter: drop-shadow(0 0 12px rgba(0, 188, 212, 0.4)) 
+            drop-shadow(0 0 20px rgba(76, 175, 80, 0.3)) 
+            drop-shadow(0 0 28px rgba(255, 152, 0, 0.2)) !important;
+    transition: all 0.4s ease !important;
+    position: relative !important;
+    z-index: 2 !important;
+}
+
+.container-fluid .position-relative.d-flex .display-1.text-white,
+.container .position-relative.d-flex .display-1.text-white,
+div.position-relative.d-flex .display-1.text-white.text-uppercase {
+    background: linear-gradient(45deg, 
+        #64b5f6 0%,     /* Light blue */
+        #81c784 20%,    /* Light green */ 
+        #ffb74d 40%,    /* Light orange */
+        #f06292 60%,    /* Light pink */
+        #ba68c8 80%,    /* Light purple */
+        #64b5f6 100%    /* Back to light blue */
+    ) !important;
+    background-size: 300% 300% !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    color: transparent !important;
+    -webkit-text-stroke: none !important;
+    animation: gentleAurora 8s ease-in-out infinite !important;
+    filter: drop-shadow(0 0 8px rgba(100, 181, 246, 0.3)) 
+            drop-shadow(0 0 16px rgba(129, 199, 132, 0.2)) !important;
+    transition: all 0.6s ease !important;
+    position: relative !important;
+    z-index: 2 !important;
+}
+
+.container-fluid .position-relative.d-flex .position-absolute.text-primary,
+.container .position-relative.d-flex .position-absolute.text-primary,
+div.position-relative.d-flex .position-absolute.text-primary.text-uppercase {
+    background: linear-gradient(135deg, 
+        #00bcd4 0%,     /* Cyan */
+        #4caf50 15%,    /* Green */
+        #ff9800 30%,   /* Orange */
+        #e91e63 45%,   /* Pink */
+        #9c27b0 60%,   /* Purple */
+        #3f51b5 75%,   /* Indigo */
+        #00bcd4 100%   /* Back to cyan */
+    ) !important;
+    background-size: 400% 400% !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    color: transparent !important;
+    animation: vibrantFlow 6s ease-in-out infinite !important;
+    filter: drop-shadow(0 0 12px rgba(0, 188, 212, 0.4)) 
+            drop-shadow(0 0 20px rgba(76, 175, 80, 0.3)) 
+            drop-shadow(0 0 28px rgba(255, 152, 0, 0.2)) !important;
+    transition: all 0.4s ease !important;
+    position: relative !important;
+    z-index: 3 !important;
+}
+
+/* Apply vibrant northern lights gradient to background text */
+.position-relative.d-flex .display-1.text-white {
+    background: linear-gradient(45deg, 
+        #64b5f6 0%,     /* Light blue */
+        #81c784 20%,    /* Light green */ 
+        #ffb74d 40%,    /* Light orange */
+        #f06292 60%,    /* Light pink */
+        #ba68c8 80%,    /* Light purple */
+        #64b5f6 100%    /* Back to light blue */
+    ) !important;
+    background-size: 300% 300% !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    color: transparent !important;
+    animation: gentleAurora 8s ease-in-out infinite !important;
+    filter: drop-shadow(0 0 8px rgba(100, 181, 246, 0.3)) 
+            drop-shadow(0 0 16px rgba(129, 199, 132, 0.2)) !important;
+    transition: all 0.6s ease !important;
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+/* Apply vibrant gradient to foreground text */
+.position-relative.d-flex .position-absolute.text-primary {
+    background: linear-gradient(135deg, 
+        #00bcd4 0%,     /* Cyan */
+        #4caf50 15%,    /* Green */
+        #ff9800 30%,   /* Orange */
+        #e91e63 45%,   /* Pink */
+        #9c27b0 60%,   /* Purple */
+        #3f51b5 75%,   /* Indigo */
+        #00bcd4 100%   /* Back to cyan */
+    ) !important;
+    background-size: 400% 400% !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    color: transparent !important;
+    animation: vibrantFlow 6s ease-in-out infinite !important;
+    filter: drop-shadow(0 0 12px rgba(0, 188, 212, 0.4)) 
+            drop-shadow(0 0 20px rgba(76, 175, 80, 0.3)) 
+            drop-shadow(0 0 28px rgba(255, 152, 0, 0.2)) !important;
+    transition: all 0.4s ease !important;
+    position: relative !important;
+    z-index: 2 !important;
+}
+
+/* Fallback for browsers that don't support background-clip: text */
+@supports not (-webkit-background-clip: text) {
+    .position-relative.d-flex .display-1.text-white {
+        color: #64b5f6 !important;
+        text-shadow: 0 0 20px rgba(100, 181, 246, 0.6), 
+                     0 0 40px rgba(129, 199, 132, 0.4) !important;
+    }
+    
+    .position-relative.d-flex .position-absolute.text-primary {
+        color: #00bcd4 !important;
+        text-shadow: 0 0 20px rgba(0, 188, 212, 0.6), 
+                     0 0 40px rgba(76, 175, 80, 0.4) !important;
+    }
+}
+
+/* Ensure webkit prefixes work on Safari */
+.position-relative.d-flex .display-1.text-white,
+.position-relative.d-flex .position-absolute.text-primary {
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-attachment: fixed;
+}
+
+/* FINAL: Complete gradient styles for H1 headers - all consolidated */
+
+/* MASTER GRADIENT RULES - Override everything */
+h1.display-1.text-uppercase.text-white {
+    background: linear-gradient(45deg, 
+        #ff6b6b 0%,     /* Coral red */
+        #4ecdc4 25%,    /* Turquoise */
+        #45b7d1 50%,    /* Sky blue */
+        #f093fb 75%,    /* Light purple */
+        #ff6b6b 100%    /* Back to coral */
+    ) !important;
+    background-size: 400% 400% !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    color: transparent !important;
+    animation: rainbowShift 4s ease-in-out infinite !important;
+    text-shadow: none !important;
+    -webkit-text-stroke: none !important;
+}
+
+h1.position-absolute.text-uppercase.text-primary {
+    background: linear-gradient(135deg, 
+        #ff9a9e 0%,     /* Light pink */
+        #fecfef 25%,    /* Lavender */
+        #fecfef 50%,    /* Lavender */
+        #ff9a9e 75%,    /* Light pink */
+        #ff9a9e 100%    /* Light pink */
+    ) !important;
+    background-size: 400% 400% !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    color: transparent !important;
+    animation: softFlow 3s ease-in-out infinite !important;
+}
+
+@keyframes rainbowShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes softFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }

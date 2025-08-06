@@ -1,0 +1,11 @@
+Model Information:
+* title:	Sculpture of Singapore Merlion
+* source:	https://sketchfab.com/3d-models/sculpture-of-singapore-merlion-d147b7a436b44a0691a05072f88191ae
+* author:	sanjus (https://sketchfab.com/sanjus)
+
+Model License:
+* license type:	CC-BY-NC-SA-4.0 (http://creativecommons.org/licenses/by-nc-sa/4.0/)
+* requirements:	Author must be credited. No commercial use. Modified versions must have the same license.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Sculpture of Singapore Merlion" (https://sketchfab.com/3d-models/sculpture-of-singapore-merlion-d147b7a436b44a0691a05072f88191ae) by sanjus (https://sketchfab.com/sanjus) licensed under CC-BY-NC-SA-4.0 (http://creativecommons.org/licenses/by-nc-sa/4.0/)

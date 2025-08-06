@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Northern Lights & Blinking Stars Test</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+        
+        #threejs-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .overlay-text {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            text-align: center;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .status-container {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            color: white;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 12px;
+            z-index: 100;
+        }
+        
+        .debug-info {
+            position: fixed;
+            top: 120px;
+            right: 20px;
+            color: white;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 11px;
+            font-family: monospace;
+            z-index: 100;
+            max-width: 300px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="threejs-canvas"></canvas>
+    
+    <div class="overlay-text">
+        <h1>🌌 Northern Lights & ⭐ Blinking Stars</h1>
+        <p>Move your mouse to interact with the stars</p>
+        <p>Watch the dynamic aurora colors change over time</p>
+    </div>
+    
+    <div class="status-container">
+        <div>🌌 Northern Lights: <span id="aurora-status">Loading...</span></div>
+        <div>⭐ Blinking Stars: <span id="stars-status">Loading...</span></div>
+        <div>🎮 Three.js: <span id="threejs-status">Loading...</span></div>
+    </div>
+    
+    <div class="debug-info">
+        <div><strong>Debug Info:</strong></div>
+        <div>Canvas: <span id="canvas-status">Checking...</span></div>
+        <div>Renderer: <span id="renderer-status">Initializing...</span></div>
+        <div>Scene Objects: <span id="objects-count">0</span></div>
+        <div>Frame Rate: <span id="fps">0</span> fps</div>
+    </div>
+
+    <!-- Three.js Library -->
+    <script src="lib/three/three.min.js"></script>
+    
+    <script>
+        // Enhanced debug function
+        function debugThreeJS() {
+            console.log('=== Northern Lights & Stars Debug ===');
+            console.log('THREE object available:', typeof THREE !== 'undefined');
+            console.log('Canvas element found:', !!document.getElementById('threejs-canvas'));
+            console.log('Window dimensions:', window.innerWidth, 'x', window.innerHeight);
+            console.log('User agent:', navigator.userAgent);
+            
+            // Update status indicators
+            const updateStatus = (id, message, color = '#00ff00') => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.textContent = message;
+                    element.style.color = color;
+                }
+            };
+            
+            updateStatus('threejs-status', typeof THREE !== 'undefined' ? 'Loaded ✅' : 'Failed ❌');
+            updateStatus('canvas-status', document.getElementById('threejs-canvas') ? 'Found ✅' : 'Missing ❌');
+            
+            if (typeof THREE !== 'undefined') {
+                console.log('THREE.js version:', THREE.REVISION);
+                return true;
+            }
+            return false;
+        }
+
+        // Three.js Animated Background Implementation with Northern Lights and Stars
+        class Portfolio3D {
+            constructor() {
+                this.scene = null;
+                this.camera = null;
+                this.renderer = null;
+                this.particles = null;
+                this.geometries = [];
+                this.gltfModels = [];
+                this.mouse = { x: 0, y: 0 };
+                this.targetMouse = { x: 0, y: 0 };
+                this.backgroundMaterial = null;
+                this.starMaterial = null;
+                this.northernLightsMaterial = null;
+                this.scrollY = 0;
+                this.interactiveStars = [];
+                this.raycaster = new THREE.Raycaster();
+                this.frameCount = 0;
+                this.lastTime = Date.now();
+                
+                this.init();
+                this.createNorthernLightsBackground();
+                this.createBlinkingStarField();
+                this.setupEventListeners();
+                this.animate();
+            }
+
+            init() {
+                console.log('🚀 Initializing Three.js with Northern Lights background...');
+                
+                // Scene setup - NO background color so we can see the northern lights
+                this.scene = new THREE.Scene();
+                
+                // Camera setup
+                this.camera = new THREE.PerspectiveCamera(
+                    75, 
+                    window.innerWidth / window.innerHeight, 
+                    0.1, 
+                    1000
+                );
+                this.camera.position.z = 30;
+                
+                // Renderer setup
+                const canvas = document.getElementById('threejs-canvas');
+                if (!canvas) {
+                    console.error('❌ Canvas element not found!');
+                    return;
+                }
+                
+                const isMobile = window.innerWidth <= 768;
+                this.renderer = new THREE.WebGLRenderer({ 
+                    canvas: canvas,
+                    alpha: true,
+                    antialias: !isMobile,
+                    powerPreference: isMobile ? "low-power" : "high-performance"
+                });
+                this.renderer.setSize(window.innerWidth, window.innerHeight);
+                this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1 : 2));
+                
+                // Basic lighting
+                const ambientLight = new THREE.AmbientLight(0x404040, 0.3);
+                this.scene.add(ambientLight);
+                
+                const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+                directionalLight.position.set(10, 10, 5);
+                this.scene.add(directionalLight);
+                
+                console.log('✅ Scene initialized, ready for northern lights...');
+                
+                // Update status
+                const updateStatus = (id, message) => {
+                    const element = document.getElementById(id);
+                    if (element) element.textContent = message;
+                };
+                updateStatus('renderer-status', 'Created ✅');
+                
+                // Force an immediate render
+                this.renderer.render(this.scene, this.camera);
+            }
+            
+            createNorthernLightsBackground() {
+                console.log('🌌 Creating spectacular northern lights background...');
+                
+                // Create a large background sphere that will be visible
+                const sphereGeometry = new THREE.SphereGeometry(800, 64, 64);
+                
+                // Northern lights shader - this WILL be visible
+                const vertexShader = `
+                    varying vec3 vWorldPosition;
+                    varying vec2 vUv;
+                    
+                    void main() {
+                        vUv = uv;
+                        vec4 worldPosition = modelMatrix * vec4(position, 1.0);
+                        vWorldPosition = worldPosition.xyz;
+                        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                    }
+                `;
+                
+                const fragmentShader = `
+                    uniform float time;
+                    varying vec3 vWorldPosition;
+                    varying vec2 vUv;
+                    
+                    // Enhanced noise function for organic aurora movement
+                    float noise(vec2 p) {
+                        return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
+                    }
+                    
+                    float smoothNoise(vec2 p) {
+                        vec2 i = floor(p);
+                        vec2 f = fract(p);
+                        float a = noise(i);
+                        float b = noise(i + vec2(1.0, 0.0));
+                        float c = noise(i + vec2(0.0, 1.0));
+                        float d = noise(i + vec2(1.0, 1.0));
+                        vec2 u = f * f * (3.0 - 2.0 * f);
+                        return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
+                    }
+                    
+                    void main() {
+                        vec3 direction = normalize(vWorldPosition);
+                        float height = direction.y;
+                        
+                        // Base night sky colors - deep space
+                        vec3 deepSpace = vec3(0.01, 0.02, 0.08);        // Very dark blue-black
+                        vec3 nightSky = vec3(0.03, 0.08, 0.18);         // Dark blue
+                        vec3 horizon = vec3(0.08, 0.15, 0.35);          // Lighter blue at horizon
+                        
+                        // Dynamic aurora colors that change dramatically over time
+                        vec3 auroraGreen = vec3(
+                            0.2 + 0.4 * sin(time * 0.8),
+                            0.8 + 0.2 * sin(time * 0.6),
+                            0.4 + 0.4 * sin(time * 0.4)
+                        );
+                        
+                        vec3 auroraCyan = vec3(
+                            0.1 + 0.3 * sin(time * 0.5),
+                            0.7 + 0.3 * sin(time * 0.7),
+                            0.9 + 0.1 * sin(time * 0.9)
+                        );
+                        
+                        vec3 auroraPurple = vec3(
+                            0.6 + 0.4 * sin(time * 1.1),
+                            0.3 + 0.4 * sin(time * 0.8),
+                            0.9 + 0.1 * sin(time * 0.6)
+                        );
+                        
+                        vec3 auroraPink = vec3(
+                            0.9 + 0.1 * sin(time * 0.3),
+                            0.5 + 0.5 * sin(time * 1.2),
+                            0.7 + 0.3 * sin(time * 0.7)
+                        );
+                        
+                        // Create height-based gradient
+                        float heightFactor = (height + 1.0) * 0.5;
+                        vec3 baseColor = mix(deepSpace, nightSky, heightFactor);
+                        baseColor = mix(baseColor, horizon, pow(heightFactor, 4.0));
+                        
+                        // Complex aurora wave patterns with enhanced movement
+                        float wave1 = sin(direction.x * 2.5 + time * 2.0 + smoothNoise(direction.xz * 3.0 + time * 0.5) * 5.0);
+                        float wave2 = sin(direction.z * 3.5 + time * 1.5 + smoothNoise(direction.xy * 2.5 + time * 0.4) * 4.0);
+                        float wave3 = sin((direction.x + direction.z) * 2.0 + time * 2.5 + smoothNoise(direction.yz * 4.0 + time * 0.8) * 6.0);
+                        float wave4 = sin(direction.y * 3.0 + time * 1.0 + smoothNoise(direction.xz * 2.0 + time * 0.6) * 3.0);
+                        
+                        // Aurora curtain effects - dramatic vertical bands
+                        float curtain1 = sin(direction.x * 10.0 + time * 3.5) * sin(direction.y * 5.0 + time * 2.0);
+                        float curtain2 = cos(direction.z * 8.0 + time * 3.0) * cos(direction.x * 6.0 + time * 2.5);
+                        float curtain3 = sin((direction.x - direction.z) * 9.0 + time * 2.2) * sin(direction.y * 4.0 + time * 3.2);
+                        
+                        // Calculate aurora visibility with enhanced intensity
+                        float auroraHeight = smoothstep(-0.5, 1.8, height);
+                        float auroraIntensity = auroraHeight * 
+                            ((wave1 + wave2 + wave3 + wave4) * 0.25 + 
+                             (curtain1 + curtain2 + curtain3) * 0.4) * 
+                            (0.7 + 0.3 * sin(time * 0.6)); // Enhanced breathing effect
+                        
+                        // Boost intensity for better visibility
+                        auroraIntensity = max(0.0, auroraIntensity) * 2.0;
+                        
+                        // Dynamic color mixing with dramatic transitions
+                        float colorCycle = time * 0.3;
+                        vec3 auroraColor = mix(auroraGreen, auroraCyan, sin(colorCycle) * 0.5 + 0.5);
+                        auroraColor = mix(auroraColor, auroraPurple, sin(colorCycle + 2.0) * 0.5 + 0.5);
+                        auroraColor = mix(auroraColor, auroraPink, sin(colorCycle + 4.0) * 0.4 + 0.6);
+                        
+                        // Enhanced shimmer and sparkle effects
+                        float shimmer = sin(time * 6.0 + direction.x * 25.0 + direction.z * 20.0) * 0.3 + 0.7;
+                        float sparkle = sin(time * 10.0 + direction.y * 30.0) * sin(time * 8.0 + direction.x * 22.0) * 0.4 + 0.6;
+                        auroraColor *= shimmer * sparkle;
+                        
+                        // Final color blending - ensure aurora is prominent
+                        vec3 finalColor = mix(baseColor, auroraColor, auroraIntensity);
+                        
+                        // Add extra aurora glow at the horizon for atmosphere
+                        float horizonGlow = smoothstep(-0.3, 0.4, height) * (1.0 - smoothstep(0.4, 0.9, height));
+                        finalColor += auroraGreen * horizonGlow * 0.6 * sin(time * 1.5);
+                        
+                        // Add background stars directly in the shader
+                        float starField = smoothNoise(direction.xy * 100.0);
+                        if (starField > 0.94 && height > 0.0) {
+                            float starBrightness = (starField - 0.94) * 16.0;
+                            finalColor += vec3(0.9, 0.95, 1.0) * starBrightness * (0.8 + 0.2 * sin(time * 4.0 + direction.x * 60.0));
+                        }
+                        
+                        gl_FragColor = vec4(finalColor, 1.0);
+                    }
+                `;
+                
+                // Create the shader material
+                this.northernLightsMaterial = new THREE.ShaderMaterial({
+                    vertexShader: vertexShader,
+                    fragmentShader: fragmentShader,
+                    uniforms: {
+                        time: { value: 0.0 }
+                    },
+                    side: THREE.BackSide,
+                    depthWrite: false,
+                    transparent: false
+                });
+                
+                // Create the background sphere
+                const backgroundSphere = new THREE.Mesh(sphereGeometry, this.northernLightsMaterial);
+                this.scene.add(backgroundSphere);
+                
+                console.log('✅ Northern lights background created and added to scene');
+                
+                // Update status
+                const updateStatus = (id, message) => {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        element.textContent = message;
+                        element.style.color = '#00ff00';
+                    }
+                };
+                updateStatus('aurora-status', 'Active & Animating ✅');
+            }
+            
+            createBlinkingStarField() {
+                console.log('⭐ Creating beautiful blinking star field...');
+                
+                const starCount = 2000; // Increased for richer night sky
+                const positions = new Float32Array(starCount * 3);
+                const colors = new Float32Array(starCount * 3);
+                const sizes = new Float32Array(starCount);
+                const phases = new Float32Array(starCount); // For individual blinking timing
+                
+                for (let i = 0; i < starCount; i++) {
+                    const i3 = i * 3;
+                    
+                    // Distribute stars across a wide area
+                    positions[i3] = (Math.random() - 0.5) * 500;     // X
+                    positions[i3 + 1] = (Math.random() - 0.5) * 400; // Y  
+                    positions[i3 + 2] = (Math.random() - 0.5) * 400; // Z
+                    
+                    // Star colors with enhanced variety
+                    const starType = Math.random();
+                    if (starType < 0.4) {
+                        // Brilliant white stars
+                        colors[i3] = 1.0;
+                        colors[i3 + 1] = 1.0;
+                        colors[i3 + 2] = 1.0;
+                    } else if (starType < 0.6) {
+                        // Blue-white giants
+                        colors[i3] = 0.8 + Math.random() * 0.2;
+                        colors[i3 + 1] = 0.9 + Math.random() * 0.1;
+                        colors[i3 + 2] = 1.0;
+                    } else if (starType < 0.8) {
+                        // Warm yellow stars
+                        colors[i3] = 1.0;
+                        colors[i3 + 1] = 0.8 + Math.random() * 0.2;
+                        colors[i3 + 2] = 0.6 + Math.random() * 0.3;
+                    } else {
+                        // Aurora-tinted stars
+                        colors[i3] = 0.5 + Math.random() * 0.5;
+                        colors[i3 + 1] = 0.8 + Math.random() * 0.2;
+                        colors[i3 + 2] = 0.7 + Math.random() * 0.3;
+                    }
+                    
+                    // Variable star sizes
+                    sizes[i] = 3 + Math.random() * 10;
+                    
+                    // Individual phase for unique blinking
+                    phases[i] = Math.random() * Math.PI * 2;
+                }
+                
+                const geometry = new THREE.BufferGeometry();
+                geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+                geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+                geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+                geometry.setAttribute('phase', new THREE.BufferAttribute(phases, 1));
+                
+                // Enhanced star shader for beautiful blinking effects
+                const starMaterial = new THREE.ShaderMaterial({
+                    uniforms: {
+                        time: { value: 0.0 },
+                        mousePos: { value: new THREE.Vector2(0, 0) },
+                        pointTexture: { value: this.createBlinkingStarTexture() }
+                    },
+                    vertexShader: `
+                        attribute float size;
+                        attribute float phase;
+                        varying vec3 vColor;
+                        varying float vAlpha;
+                        uniform float time;
+                        uniform vec2 mousePos;
+                        
+                        void main() {
+                            vColor = color;
+                            vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+                            
+                            // Enhanced multiple blinking patterns for natural effect
+                            float blink1 = sin(time * 2.5 + phase) * 0.5 + 0.5;
+                            float blink2 = sin(time * 1.8 + phase * 1.7) * 0.4 + 0.6;
+                            float blink3 = sin(time * 3.8 + phase * 0.8) * 0.3 + 0.7;
+                            float blink4 = sin(time * 0.9 + phase * 2.3) * 0.2 + 0.8;
+                            
+                            // Combine blinking effects for realistic twinkling
+                            float blinkEffect = blink1 * blink2 * blink3 * blink4;
+                            
+                            // Mouse interaction - brighten nearby stars dramatically
+                            vec2 screenPos = (mvPosition.xy / mvPosition.w) * 0.5 + 0.5;
+                            float mouseDist = distance(screenPos, mousePos);
+                            float mouseEffect = 1.0 + (1.0 - smoothstep(0.0, 0.5, mouseDist)) * 2.0;
+                            
+                            // Pulsing effect for some bright stars
+                            float pulse = sin(time * 4.0 + phase * 2.5) * 0.3 + 0.7;
+                            
+                            // Final size with enhanced perspective
+                            gl_PointSize = size * blinkEffect * mouseEffect * pulse * (400.0 / -mvPosition.z);
+                            
+                            // Enhanced alpha variation for dramatic twinkling
+                            vAlpha = blinkEffect * (0.5 + 0.5 * sin(time * 4.5 + phase));
+                            
+                            gl_Position = projectionMatrix * mvPosition;
+                        }
+                    `,
+                    fragmentShader: `
+                        uniform sampler2D pointTexture;
+                        varying vec3 vColor;
+                        varying float vAlpha;
+                        
+                        void main() {
+                            vec4 textureColor = texture2D(pointTexture, gl_PointCoord);
+                            
+                            // Enhanced star glow effect
+                            float distFromCenter = distance(gl_PointCoord, vec2(0.5));
+                            float glow = 1.0 - smoothstep(0.0, 0.7, distFromCenter);
+                            float corona = 1.0 - smoothstep(0.1, 0.4, distFromCenter);
+                            
+                            vec4 finalColor = vec4(vColor * glow, vAlpha) * textureColor;
+                            finalColor.rgb += corona * vColor * 0.5; // Enhanced corona
+                            
+                            gl_FragColor = finalColor;
+                        }
+                    `,
+                    transparent: true,
+                    vertexColors: true,
+                    blending: THREE.AdditiveBlending,
+                    depthWrite: false
+                });
+                
+                this.particles = new THREE.Points(geometry, starMaterial);
+                this.scene.add(this.particles);
+                
+                // Store reference for animation
+                this.starMaterial = starMaterial;
+                
+                console.log('✅ Blinking star field created with', starCount, 'stars');
+                
+                // Update status
+                const updateStatus = (id, message) => {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        element.textContent = message;
+                        element.style.color = '#00ff00';
+                    }
+                };
+                updateStatus('stars-status', 'Blinking & Interactive ✅');
+            }
+            
+            createBlinkingStarTexture() {
+                const canvas = document.createElement('canvas');
+                canvas.width = 128;
+                canvas.height = 128;
+                const context = canvas.getContext('2d');
+                
+                const centerX = 64;
+                const centerY = 64;
+                
+                // Create enhanced radial gradient for star
+                const gradient = context.createRadialGradient(centerX, centerY, 0, centerX, centerY, 64);
+                gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
+                gradient.addColorStop(0.2, 'rgba(255, 255, 255, 0.9)');
+                gradient.addColorStop(0.5, 'rgba(255, 255, 255, 0.5)');
+                gradient.addColorStop(0.8, 'rgba(255, 255, 255, 0.2)');
+                gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+                
+                context.fillStyle = gradient;
+                context.fillRect(0, 0, 128, 128);
+                
+                // Add enhanced star spikes
+                context.fillStyle = 'rgba(255, 255, 255, 0.95)';
+                
+                // Main cross spikes
+                context.fillRect(61, 8, 6, 112); // Vertical
+                context.fillRect(8, 61, 112, 6); // Horizontal
+                
+                // Diagonal spikes
+                context.save();
+                context.translate(centerX, centerY);
+                context.rotate(Math.PI / 4);
+                context.fillRect(-3, -40, 6, 80);
+                context.fillRect(-40, -3, 80, 6);
+                context.restore();
+                
+                // Add secondary spikes for more dramatic effect
+                context.fillStyle = 'rgba(255, 255, 255, 0.7)';
+                context.save();
+                context.translate(centerX, centerY);
+                context.rotate(Math.PI / 8);
+                context.fillRect(-2, -25, 4, 50);
+                context.fillRect(-25, -2, 50, 4);
+                context.restore();
+                
+                return new THREE.CanvasTexture(canvas);
+            }
+            
+            setupEventListeners() {
+                // Enhanced mouse movement with star interaction
+                document.addEventListener('mousemove', (event) => {
+                    this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+                    this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+                    
+                    // Update mouse position for star shader interaction
+                    if (this.starMaterial && this.starMaterial.uniforms.mousePos) {
+                        this.starMaterial.uniforms.mousePos.value.set(
+                            event.clientX / window.innerWidth,
+                            1.0 - event.clientY / window.innerHeight
+                        );
+                    }
+                });
+                
+                // Window resize
+                window.addEventListener('resize', () => {
+                    this.camera.aspect = window.innerWidth / window.innerHeight;
+                    this.camera.updateProjectionMatrix();
+                    this.renderer.setSize(window.innerWidth, window.innerHeight);
+                });
+                
+                // Scroll-based effects
+                window.addEventListener('scroll', () => {
+                    this.scrollY = window.scrollY;
+                });
+            }
+
+            animate() {
+                requestAnimationFrame(() => this.animate());
+                
+                const time = Date.now() * 0.001;
+                
+                // Update northern lights animation - THIS IS CRUCIAL
+                if (this.northernLightsMaterial) {
+                    this.northernLightsMaterial.uniforms.time.value = time;
+                }
+                
+                // Update blinking star animation
+                if (this.starMaterial) {
+                    this.starMaterial.uniforms.time.value = time;
+                }
+                
+                // Animate star field with enhanced movement
+                if (this.particles) {
+                    this.particles.rotation.x = time * 0.008;
+                    this.particles.rotation.y = time * 0.005;
+                    
+                    // Enhanced breathing effect
+                    const breathingScale = 1 + Math.sin(time * 1.2) * 0.05;
+                    this.particles.scale.setScalar(breathingScale);
+                }
+                
+                // Enhanced camera movement with mouse following
+                this.camera.position.x += (this.mouse.x * 8 - this.camera.position.x) * 0.03;
+                this.camera.position.y += (-this.mouse.y * 8 - this.camera.position.y) * 0.03;
+                
+                // Add enhanced camera sway
+                this.camera.position.x += Math.sin(time * 0.3) * 1.2;
+                this.camera.position.y += Math.cos(time * 0.2) * 0.8;
+                
+                // Dynamic camera distance
+                const targetZ = 30 + Math.sin(time * 0.1) * 10 + (this.scrollY * 0.03);
+                this.camera.position.z += (targetZ - this.camera.position.z) * 0.05;
+                
+                this.camera.lookAt(this.scene.position);
+                
+                // Update FPS counter
+                this.frameCount++;
+                const currentTime = Date.now();
+                if (currentTime - this.lastTime >= 1000) {
+                    const fps = Math.round(this.frameCount * 1000 / (currentTime - this.lastTime));
+                    const fpsElement = document.getElementById('fps');
+                    if (fpsElement) fpsElement.textContent = fps;
+                    this.frameCount = 0;
+                    this.lastTime = currentTime;
+                }
+                
+                // Update object count
+                const objectsElement = document.getElementById('objects-count');
+                if (objectsElement) objectsElement.textContent = this.scene.children.length;
+                
+                // Render the scene
+                this.renderer.render(this.scene, this.camera);
+            }
+        }
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            if (debugThreeJS()) {
+                console.log('🚀 Starting Northern Lights & Blinking Stars...');
+                try {
+                    const portfolio = new Portfolio3D();
+                    window.portfolio3D = portfolio; // Make globally accessible
+                    console.log('✅ Northern Lights & Blinking Stars initialized successfully');
+                } catch (error) {
+                    console.error('❌ Failed to initialize:', error);
+                    const statusElement = document.getElementById('threejs-status');
+                    if (statusElement) {
+                        statusElement.textContent = 'Failed ❌';
+                        statusElement.style.color = '#ff0000';
+                    }
+                }
+            } else {
+                console.error('❌ Three.js not available');
+            }
+        });
+    </script>
+</body>
+</html>

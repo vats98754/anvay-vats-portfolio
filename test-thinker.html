@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Thinker Model</title>
+    <style>
+        body { margin: 0; background: #222; color: white; font-family: Arial; }
+        canvas { border: 2px solid #444; margin: 20px; }
+        .info { padding: 20px; }
+        .profile-test { 
+            width: 300px; 
+            height: 300px; 
+            border: 3px solid #fff; 
+            border-radius: 50%; 
+            margin: 20px;
+            background: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="info">
+        <h1>🗿 Thinker Model Test</h1>
+        <p>Testing GLTF model loading and profile picture replacement...</p>
+        <div id="status">Loading...</div>
+    </div>
+    
+    <div class="profile-test">
+        <img class="profile-image" src="assets/the_thinker_by_auguste_rodin/textures/material_0_baseColor.jpeg" alt="Test Profile" style="width: 100%; height: 100%; border-radius: 50%;">
+    </div>
+
+    <!-- Three.js Libraries -->
+    <script src="lib/three/three.min.js"></script>
+    <script src="lib/three/GLTFLoader.js"></script>
+
+    <script>
+        console.log('🔍 Testing Thinker model loading...');
+        
+        // Check if Three.js and GLTFLoader are available
+        console.log('THREE available:', typeof THREE !== 'undefined');
+        console.log('GLTFLoader available:', typeof THREE.GLTFLoader !== 'undefined');
+        
+        const status = document.getElementById('status');
+        
+        if (typeof THREE === 'undefined') {
+            status.innerHTML = '❌ Three.js not loaded';
+            console.error('Three.js not available');
+        } else if (typeof THREE.GLTFLoader === 'undefined') {
+            status.innerHTML = '❌ GLTFLoader not available';
+            console.error('GLTFLoader not available');
+        } else {
+            status.innerHTML = '✅ Libraries loaded, testing model...';
+            
+            // Test GLTF loading
+            const loader = new THREE.GLTFLoader();
+            loader.load(
+                'assets/the_thinker_by_auguste_rodin/scene.gltf',
+                (gltf) => {
+                    console.log('✅ Thinker model loaded successfully:', gltf);
+                    status.innerHTML = '✅ Thinker model loaded successfully!';
+                    
+                    // Test profile picture replacement
+                    testProfileReplacement(gltf.scene);
+                },
+                (progress) => {
+                    console.log('Loading progress:', (progress.loaded / progress.total * 100) + '%');
+                    status.innerHTML = `Loading: ${Math.round(progress.loaded / progress.total * 100)}%`;
+                },
+                (error) => {
+                    console.error('❌ Error loading Thinker model:', error);
+                    status.innerHTML = '❌ Error loading Thinker model: ' + error.message;
+                }
+            );
+        }
+        
+        function testProfileReplacement(thinkerModel) {
+            console.log('🖼️ Testing profile picture replacement...');
+            
+            const profileImg = document.querySelector('.profile-image');
+            if (!profileImg) {
+                console.error('❌ Profile image not found');
+                return;
+            }
+            
+            // Create canvas
+            const canvas = document.createElement('canvas');
+            canvas.width = 300;
+            canvas.height = 300;
+            canvas.style.cssText = profileImg.style.cssText;
+            canvas.className = profileImg.className;
+            canvas.style.cursor = 'pointer';
+            
+            // Create Three.js scene for the canvas
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
+            camera.position.set(0, 0, 8);
+            
+            const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+            renderer.setSize(300, 300);
+            renderer.setClearColor(0x000000, 0);
+            
+            // Clone and setup thinker
+            const thinker = thinkerModel.clone();
+            thinker.scale.set(2.5, 2.5, 2.5);
+            thinker.position.set(0, -1, 0);
+            
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0x404040, 0.6);
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(5, 5, 5);
+            scene.add(ambientLight);
+            scene.add(directionalLight);
+            scene.add(thinker);
+            
+            // Replace image with canvas
+            try {
+                profileImg.parentNode.replaceChild(canvas, profileImg);
+                console.log('✅ Profile image replaced with 3D canvas');
+                
+                // Animation loop
+                function animate() {
+                    thinker.rotation.y += 0.01;
+                    thinker.position.y = -1 + Math.sin(Date.now() * 0.001) * 0.1;
+                    renderer.render(scene, camera);
+                    requestAnimationFrame(animate);
+                }
+                animate();
+                
+                status.innerHTML += '<br>✅ Interactive 3D profile created!';
+                
+            } catch (error) {
+                console.error('❌ Error replacing profile image:', error);
+                status.innerHTML += '<br>❌ Error replacing profile image: ' + error.message;
+            }
+        }
+    </script>
+</body>
+</html>
