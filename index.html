@@ -476,6 +476,41 @@
     
     <!-- Modular TypeScript Compiled Code -->
     <script type="module" src="dist/main.js?v=1751318319"></script>
+    
+    <!-- Asset Loading Diagnostics -->
+    <script>
+        // Debug asset loading for GitHub Pages
+        console.log('🌐 Current location:', {
+            hostname: window.location.hostname,
+            origin: window.location.origin,
+            pathname: window.location.pathname,
+            href: window.location.href
+        });
+        
+        // Test if a basic asset can be loaded
+        function testAssetAccess() {
+            const testImagePath = 'assets/the_thinker_by_auguste_rodin/textures/Material_baseColor.png';
+            const img = new Image();
+            
+            img.onload = function() {
+                console.log('✅ Basic asset test passed:', testImagePath);
+            };
+            
+            img.onerror = function(error) {
+                console.error('❌ Basic asset test failed:', testImagePath, error);
+                console.error('This suggests GLTF models will also fail to load');
+            };
+            
+            img.src = testImagePath;
+        }
+        
+        // Run test after page loads
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', testAssetAccess);
+        } else {
+            testAssetAccess();
+        }
+    </script>
 </body>
 
 </html>

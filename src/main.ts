@@ -1,6 +1,7 @@
 import { UIHandler } from './ui/UIHandler.js';
 import { SceneManager } from './scene/SceneManager.js';
 import { Utils } from './utils/Utils.js';
+import { Config } from './config/Config.js';
 
 /**
  * Main application class that coordinates all components
@@ -49,6 +50,9 @@ export class PortfolioApp {
 
       console.log('🎉 Portfolio Application fully initialized!');
       
+      // Add debug information to console
+      Utils.debugThreeJS();
+      
       // Create success indicator
       Utils.createStatusIndicator(
         '🎉 Portfolio Ready!', 
@@ -56,6 +60,28 @@ export class PortfolioApp {
         3000, 
         { bottom: '20px', right: '20px' }
       );
+      
+      // Add global debug functions for troubleshooting
+      (window as any).debugPortfolio = {
+        reloadModels: () => {
+          if (this.sceneManager) {
+            console.log('🔄 Manually reloading GLTF models...');
+            (this.sceneManager as any).loadGLTFModels();
+          }
+        },
+        testAssetPaths: () => {
+          console.log('🧪 Testing asset paths...');
+          console.log('Base URL:', Config.getAssetBaseUrl());
+          console.log('GLTF Models:', Config.getGLTFModels());
+        },
+        getSceneInfo: () => {
+          if (this.sceneManager) {
+            console.log('🎬 Scene info:', this.sceneManager);
+          }
+        }
+      };
+      
+      console.log('🛠️  Debug functions available: window.debugPortfolio');
 
     } catch (error) {
       console.error('❌ Failed to initialize Portfolio Application:', error);
