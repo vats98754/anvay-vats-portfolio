@@ -4,8 +4,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# TypeScript compiled output
-dist/
+# TypeScript compiled output (commented out for GitHub Pages)
+# dist/
 *.js.map
 
 # Development and build files
