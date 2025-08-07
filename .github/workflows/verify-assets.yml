@@ -1,0 +1,100 @@
+name: GitHub Pages Asset Verification
+
+on:
+  push:
+    branches: [ main, master, threejs ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  verify-assets:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Build TypeScript
+      run: npm run build
+    
+    - name: Verify GLTF assets exist
+      run: |
+        echo "🔍 Checking for GLTF asset files..."
+        for asset in \
+          "assets/the_thinker_by_auguste_rodin/scene.gltf" \
+          "assets/brain_point_cloud/scene.gltf" \
+          "assets/shiba/scene.gltf" \
+          "assets/an-animated-cat/source/scene.gltf" \
+          "assets/arduino_uno_r3_elegoo/scene.gltf" \
+          "assets/stylized_planet/scene.gltf"
+        do
+          if [ -f "$asset" ]; then
+            echo "✅ Found: $asset"
+          else
+            echo "❌ Missing: $asset"
+            exit 1
+          fi
+        done
+    
+    - name: Verify Three.js libraries
+      run: |
+        echo "🔍 Checking for Three.js libraries..."
+        if [ -f "lib/three/three.min.js" ]; then
+          echo "✅ Found: three.min.js"
+        else
+          echo "❌ Missing: three.min.js"
+          exit 1
+        fi
+        
+        if [ -f "lib/three/GLTFLoader.js" ]; then
+          echo "✅ Found: GLTFLoader.js"
+        else
+          echo "❌ Missing: GLTFLoader.js"
+          exit 1
+        fi
+    
+    - name: Check file sizes
+      run: |
+        echo "📊 Asset file sizes:"
+        find assets -name "*.gltf" -exec ls -lh {} \;
+        find assets -name "*.bin" -exec ls -lh {} \;
+    
+    - name: Verify CNAME
+      run: |
+        if [ -f "CNAME" ]; then
+          echo "✅ CNAME file found:"
+          cat CNAME
+        else
+          echo "⚠️ No CNAME file found"
+        fi
+    
+    - name: Test asset accessibility (simulation)
+      run: |
+        echo "🧪 Simulating asset load tests..."
+        node -e "
+          const fs = require('fs');
+          const path = require('path');
+          
+          const assets = [
+            'assets/the_thinker_by_auguste_rodin/scene.gltf',
+            'assets/brain_point_cloud/scene.gltf',
+            'assets/shiba/scene.gltf'
+          ];
+          
+          assets.forEach(asset => {
+            try {
+              const stats = fs.statSync(asset);
+              console.log(\`✅ \${asset}: \${(stats.size / 1024).toFixed(2)} KB\`);
+            } catch (error) {
+              console.log(\`❌ \${asset}: Not found\`);
+            }
+          });
+        "
