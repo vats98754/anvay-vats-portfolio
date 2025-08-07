@@ -475,7 +475,27 @@
     <script src="lib/three/GLTFLoader.js"></script>
     
     <!-- Modular TypeScript Compiled Code -->
-    <script type="module" src="dist/main.js?v=1751318319"></script>
+    <script type="module" src="dist/main.js?v=1751318319" 
+            onerror="console.error('❌ Failed to load main.js module'); document.body.style.background='linear-gradient(45deg, #ff6b6b, #ee5a24)'; document.body.innerHTML += '<div style=&quot;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.9);color:white;padding:20px;border-radius:10px;font-family:monospace;text-align:center;z-index:9999;&quot;><h3>⚠️ Module Loading Error</h3><p>The Three.js portfolio failed to load.<br>This might be due to GitHub Pages deployment issues.</p><p><a href=&quot;debug-assets.html&quot; style=&quot;color:#4dabf7;&quot;>→ Open Debug Tool</a></p></div>';"></script>
+    
+    <!-- Fallback for module loading errors -->
+    <script>
+        // Add a timeout to detect if the module failed to load
+        setTimeout(() => {
+            if (!window.debugPortfolio) {
+                console.error('❌ Main portfolio module did not initialize within 5 seconds');
+                console.log('🔧 Possible issues:');
+                console.log('  - dist/main.js not accessible');
+                console.log('  - ES6 module compatibility issues');
+                console.log('  - Network/CORS issues');
+                console.log('  - JavaScript execution errors');
+                
+                // Show a simple fallback background
+                document.body.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+                document.body.style.minHeight = '100vh';
+            }
+        }, 5000);
+    </script>
     
     <!-- Asset Loading Diagnostics -->
     <script>
@@ -484,7 +504,8 @@
             hostname: window.location.hostname,
             origin: window.location.origin,
             pathname: window.location.pathname,
-            href: window.location.href
+            href: window.location.href,
+            protocol: window.location.protocol
         });
         
         // Test if a basic asset can be loaded
@@ -504,11 +525,43 @@
             img.src = testImagePath;
         }
         
-        // Run test after page loads
+        // Test if main.js is loadable
+        function testMainJS() {
+            fetch('dist/main.js')
+                .then(response => {
+                    if (response.ok) {
+                        console.log('✅ dist/main.js is accessible');
+                    } else {
+                        console.error('❌ dist/main.js returned status:', response.status);
+                    }
+                })
+                .catch(error => {
+                    console.error('❌ Failed to fetch dist/main.js:', error);
+                });
+        }
+        
+        // Test THREE.js availability
+        function testThreeJS() {
+            setTimeout(() => {
+                if (typeof window.THREE !== 'undefined') {
+                    console.log('✅ THREE.js loaded successfully');
+                } else {
+                    console.error('❌ THREE.js not available');
+                }
+            }, 2000);
+        }
+        
+        // Run tests after page loads
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', testAssetAccess);
+            document.addEventListener('DOMContentLoaded', () => {
+                testAssetAccess();
+                testMainJS();
+                testThreeJS();
+            });
         } else {
             testAssetAccess();
+            testMainJS();
+            testThreeJS();
         }
     </script>
 </body>
