@@ -19,6 +19,22 @@ export class Config {
     initialZ: 30,
   };
 
+  /**
+   * Get the base URL for assets
+   */
+  public static getAssetBaseUrl(): string {
+    // Check if we're on GitHub Pages with custom domain
+    if (window.location.hostname === 'anvay.blog') {
+      return 'https://anvay.blog/';
+    }
+    // Check if we're on GitHub Pages default domain
+    if (window.location.hostname.includes('github.io')) {
+      return window.location.origin + '/anvay-vats-portfolio/';
+    }
+    // Local development or other hosting
+    return window.location.origin + '/';
+  }
+
   public static readonly LIGHTING_CONFIG = {
     ambientColor: 0x404040,
     ambientIntensity: 0.3,
@@ -108,6 +124,17 @@ export class Config {
       scrollTrigger: { start: 0.15, end: 0.85 },
     },
   ];
+
+  /**
+   * Get GLTF models with absolute URLs
+   */
+  public static getGLTFModels() {
+    const baseUrl = this.getAssetBaseUrl();
+    return this.GLTF_MODELS.map(model => ({
+      ...model,
+      path: baseUrl + model.path
+    }));
+  }
 
   public static isMobile(): boolean {
     return window.innerWidth <= 768;

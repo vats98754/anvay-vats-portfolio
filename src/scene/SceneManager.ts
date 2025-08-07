@@ -495,7 +495,8 @@ export class SceneManager {
     
     const loader = new (THREE as any).GLTFLoader();
     let modelsLoaded = 0;
-    const totalModels = Config.GLTF_MODELS.length;
+    const modelsToLoad = Config.getGLTFModels(); // Use the new method with absolute URLs
+    const totalModels = modelsToLoad.length;
     
     const modelLoaded = () => {
       modelsLoaded++;
@@ -504,7 +505,12 @@ export class SceneManager {
       }
     };
 
-    Config.GLTF_MODELS.forEach(modelConfig => {
+    console.log('🌐 Asset base URL:', Config.getAssetBaseUrl());
+    console.log('📦 Models to load:', modelsToLoad.map(m => ({ name: m.name, path: m.path })));
+
+    modelsToLoad.forEach(modelConfig => {
+      console.log(`🚀 Loading ${modelConfig.name} from: ${modelConfig.path}`);
+      
       loader.load(
         modelConfig.path,
         (gltf: any) => {
@@ -541,10 +547,27 @@ export class SceneManager {
           console.log(`🎯 ${modelConfig.name} model added to scene`);
         },
         (progress: any) => {
-          console.log(`${modelConfig.name} loading progress:`, (progress.loaded / progress.total * 100) + '%');
+          const percentage = Math.round((progress.loaded / progress.total) * 100);
+          console.log(`${modelConfig.name} loading progress: ${percentage}% (${progress.loaded}/${progress.total} bytes)`);
         },
         (error: any) => {
-          console.error(`❌ Error loading ${modelConfig.name} model:`, error);
+          console.error(`❌ Error loading ${modelConfig.name} model from ${modelConfig.path}:`, error);
+          console.error('Error details:', {
+            message: error.message,
+            type: error.type,
+            target: error.target,
+            status: error.status || 'unknown',
+          });
+          
+          // Try to provide helpful error information
+          if (error.status === 404) {
+            console.error(`📁 File not found. Check if the asset exists at: ${modelConfig.path}`);
+          } else if (error.status === 0 || error.type === 'error') {
+            console.error('🔒 This might be a CORS or network connectivity issue.');
+            console.error('🌐 Current URL:', window.location.href);
+            console.error('📦 Asset URL:', modelConfig.path);
+          }
+          
           modelLoaded();
         }
       );
