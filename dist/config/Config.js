@@ -8,7 +8,7 @@ export class Config {
     static getAssetBaseUrl() {
         // Check if we're on GitHub Pages with custom domain
         if (window.location.hostname === 'anvay.blog') {
-            return 'https://anvay.blog/';
+            return window.location.origin + '/';
         }
         // Check if we're on GitHub Pages default domain
         if (window.location.hostname.includes('github.io')) {
