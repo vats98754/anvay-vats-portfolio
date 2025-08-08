@@ -25,6 +25,21 @@ body {
   text-align: left;
   background-color: #ffffff;
 }
+
+/* Design tokens (Chakra-inspired) */
+:root{
+  --bg:#ffffff; 
+  --text:#111111; 
+  --accent:#0a66ff; 
+  --border:#eeeeee; 
+  --muted:#666666;
+  --surface:#fafafa;
+  --radius:12px; 
+  --shadow-card:0 8px 30px rgba(0,0,0,.08);
+}
+body{ color: var(--text); background: var(--bg); }
+a:focus, button:focus, .btn:focus{ outline:2px solid var(--accent) !important; outline-offset:2px; box-shadow:none; }
+::selection{ background:#dbe8ff; color:#111; }
  
 a {
   color: #0BCEAF;
@@ -98,16 +113,31 @@ h1,h2,h3,h4,h5,h6,p{
 
 /* ============ Hero and Work (minimal, Rachel Chen–inspired) ============ */
 .hero{padding-top:120px;padding-bottom:56px}
-.eyebrow{text-transform:uppercase;letter-spacing:.08em;font-size:12px;color:#666;margin-bottom:8px}
-.hero-title{font-size:40px;line-height:1.2;margin:0 0 10px 0}
+.eyebrow{text-transform:uppercase;letter-spacing:.08em;font-size:12px;color:var(--muted);margin-bottom:8px}
+.hero-title{font-size:40px;line-height:1.2;margin:0 0 10px 0;font-weight:800}
 .hero-subtitle{font-size:18px;color:#444;margin-bottom:20px}
 .hero-actions .btn{border-radius:999px}
-.hero-photo{border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.08)}
+.hero-photo{border-radius:var(--radius);box-shadow:var(--shadow-card)}
 .section-header{display:flex;align-items:baseline;gap:16px;margin-bottom:20px}
 .section-header h2{margin:0;font-size:28px}
-.section-subtitle{color:#666}
+.section-subtitle{color:var(--muted)}
 .work-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-.work-card{border:1px solid #eee;border-radius:12px;overflow:hidden;display:block;color:inherit;background:#fff}
+.work-card{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;display:block;color:inherit;background:#fff;transition:transform .2s ease, box-shadow .2s ease}
+.work-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-card)}
+.work-actions{display:flex;justify-content:center;margin-top:20px}
+
+/* Button variants (Bootstrap-compatible) */
+.btn-pill{border-radius:999px !important}
+.btn-solid{background:var(--accent);color:#fff;border:1px solid var(--accent)}
+.btn-solid:hover{filter:brightness(0.95);}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:#111}
+.btn-ghost:hover{background:var(--surface)}
+.btn-link{color:var(--accent);}
+.btn-link:hover{text-decoration:underline}
+
+/* Tag */
+.tag{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);border-radius:999px;padding:2px 10px;background:#fff;color:#333;font-size:12px}
+.tag-dot{width:6px;height:6px;border-radius:50%;background:var(--accent)}
 .work-thumb{width:100%;height:180px;object-fit:cover;display:block}
 .work-meta{padding:14px}
 .work-title{font-size:18px;margin:0 0 6px 0}
