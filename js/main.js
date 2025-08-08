@@ -1,7 +1,7 @@
 (function ($) {
     "use strict";
 
-    // Navbar on scrolling
+    // Navbar on scrolling (always visible on scroll for mobile/tablet)
     $(window).scroll(function () {
         if ($(this).scrollTop() > 200) {
             $('.navbar').fadeIn('slow').css('display', 'flex');
@@ -17,7 +17,7 @@
             event.preventDefault();
             
             $('html, body').animate({
-                scrollTop: $(this.hash).offset().top - 45
+                scrollTop: $(this.hash).offset().top - 72
             }, 1500, 'easeInOutExpo');
             
             if ($(this).parents('.navbar-nav').length) {

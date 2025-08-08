@@ -53,10 +53,9 @@
         <div class="collapse navbar-collapse px-lg-3" id="navbarCollapse">
             <div class="navbar-nav m-auto py-0">
                 <a href="#home" class="nav-item nav-link active">Home</a>
+                <a href="#work" class="nav-item nav-link">Work</a>
                 <a href="#about" class="nav-item nav-link">About</a>
-                <a href="#skill" class="nav-item nav-link">Skill</a>
-                <a href="#qualification" class="nav-item nav-link">Qualifications</a>
-                <a href="#service" class="nav-item nav-link">Service</a>
+                <a href="#qualification" class="nav-item nav-link">Experience</a>
                 <a href="#contact" class="nav-item nav-link">Contact</a>
             
             <!-- Removed this part for now
@@ -74,33 +73,80 @@
 
  
 
-    <!-- Header Start -->
-    <div class="container-fluid bg-primary d-flex align-items-center mb-5 py-5" id="home" style="min-height: 100vh;">
-        <div class="container">
-            <div class="row align-items-center">
-               
-                <div class="col-lg-7 text-center text-lg-left">
-                    <h3 class="text-white font-weight-normal mb-3">Hello, my name is</h3>
-                    <h1 class="display-3 text-uppercase text-primary mb-2" style="-webkit-text-stroke: 2px #e6ff08;">Anvay Vats</h1>
-                    <h1 class="typed-text-output d-inline font-weight-lighter text-white"></h1>
-                    <div class="typed-text d-none">Web Designer, Competitive Programmer, Web Developer, Mathematics Enthusiast, App Designer, App Developer</div>
-                    <div class="d-flex align-items-center justify-content-center justify-content-lg-start pt-5">
-                        <a href="https://docs.google.com/document/d/1zPWzhlqnyCgY4obbha1OXIctbgz-hsOj6cByc7IYFBo/edit?usp=sharing" class="btn btn-white mr-4">My Résumé</a>
-                        
-                        <a href="https://github.com/vats98754" class="btn btn-blue d-none d-sm-block">Check out some of my projects</a>
-                    </div>
-                </div>
-                <div class="col-lg-6 px-8 pl-lg-0 pb-5 pb-lg-4 about-img">
-                    <img class="img-fluid w-100 rounded-circle shadow-sm" src="img/anvay-vats-picture.jpg" alt="">
+    <!-- Hero Start -->
+    <section class="container hero" id="home">
+        <div class="row align-items-center">
+            <div class="col-lg-7">
+                <p class="eyebrow">Hi, I’m Anvay.</p>
+                <h1 class="hero-title">I bring ideas to life with design and code.</h1>
+                <p class="hero-subtitle">Engineer and developer focused on building clean, fast, and thoughtful experiences.</p>
+                <div class="hero-actions">
+                    <a href="https://docs.google.com/document/d/1zPWzhlqnyCgY4obbha1OXIctbgz-hsOj6cByc7IYFBo/edit?usp=sharing" class="btn btn-dark mr-3" target="_blank" rel="noopener">Résumé</a>
+                    <a href="https://github.com/vats98754" class="btn btn-outline-dark" target="_blank" rel="noopener">GitHub</a>
                 </div>
             </div>
+            <div class="col-lg-5 mt-5 mt-lg-0">
+                <img class="img-fluid hero-photo" src="img/profile.jpg" alt="Anvay Vats">
+            </div>
         </div>
-    </div>
-    <!-- Header End -->
+    </section>
+    <!-- Hero End -->
+
+    <!-- Work Start -->
+    <section class="container py-5" id="work">
+        <div class="section-header">
+            <h2>Work</h2>
+            <p class="section-subtitle">Selected projects</p>
+        </div>
+        <div class="work-grid">
+            <a class="work-card" href="https://github.com/vats98754/GradeTracker" target="_blank" rel="noopener">
+                <img src="img/portfolio-1.jpg" alt="GradeTracker" class="work-thumb">
+                <div class="work-meta">
+                    <h3 class="work-title">GradeTracker</h3>
+                    <p class="work-desc">Java, OOP, Serialization, multi-user grade tracker</p>
+                </div>
+            </a>
+            <a class="work-card" href="https://github.com/vats98754/DB-SQL-GUI" target="_blank" rel="noopener">
+                <img src="img/portfolio-2.jpg" alt="Competitions Database GUI" class="work-thumb">
+                <div class="work-meta">
+                    <h3 class="work-title">Competitions DB GUI</h3>
+                    <p class="work-desc">Java + SQL desktop client with embedded interpreter</p>
+                </div>
+            </a>
+            <a class="work-card" href="https://github.com/vats98754/CSIA" target="_blank" rel="noopener">
+                <img src="img/portfolio-3.jpg" alt="AI Feedback System" class="work-thumb">
+                <div class="work-meta">
+                    <h3 class="work-title">AI Feedback System</h3>
+                    <p class="work-desc">Python + Google Sheets API + NLP (sentiment analysis)</p>
+                </div>
+            </a>
+            <a class="work-card" href="https://github.com/vats98754/hand-raise-detector" target="_blank" rel="noopener">
+                <img src="img/portfolio-4.jpg" alt="Hand Raise Detector" class="work-thumb">
+                <div class="work-meta">
+                    <h3 class="work-title">Hand Raise Detector</h3>
+                    <p class="work-desc">TensorFlow + Teachable Machine computer vision app</p>
+                </div>
+            </a>
+            <a class="work-card" href="https://github.com/vats98754/every-audiobook" target="_blank" rel="noopener">
+                <img src="img/portfolio-5.jpg" alt="Every Audiobook" class="work-thumb">
+                <div class="work-meta">
+                    <h3 class="work-title">Every Audiobook</h3>
+                    <p class="work-desc">Tkinter + gTTS + Libgen API audiobook generator</p>
+                </div>
+            </a>
+            <a class="work-card" href="https://pypi.org/project/stringtoiso/0.1/" target="_blank" rel="noopener">
+                <img src="img/portfolio-6.jpg" alt="stringtoiso" class="work-thumb">
+                <div class="work-meta">
+                    <h3 class="work-title">stringtoiso</h3>
+                    <p class="work-desc">PyPI package to convert names to ISO codes</p>
+                </div>
+            </a>
+        </div>
+    </section>
 
 
     <!-- About Start -->
-    <div class="container-fluid py-5" id="about">
+    <div class="container py-5" id="about">
         <div class="container">
             <div class="position-relative d-flex align-items-center justify-content-center">
                 <h1 class="display-1 text-uppercase text-white" style="-webkit-text-stroke: 1px #fce562;">Myself</h1>
@@ -160,7 +206,7 @@
 
     
     <!-- Skill Start -->
-    <div class="container-fluid py-5" id="skill">
+    <div class="container py-5" id="skill">
         <div class="container">
             <div class="position-relative d-flex align-items-center justify-content-center">
                 <h1 class="display-1 text-uppercase text-white" style="-webkit-text-stroke: 1px #fce562;">Versatility</h1>
@@ -234,7 +280,7 @@
 
 
     <!-- Qualification Start -->
-    <div class="container-fluid py-5" id="qualification">
+    <div class="container py-5" id="qualification">
         <div class="container">
             <div class="position-relative d-flex align-items-center justify-content-center">
                 <h1 class="display-1 text-uppercase text-white" style="-webkit-text-stroke: 1px #fce562;">Qualitfications</h1>
@@ -327,8 +373,8 @@
 
 
 
-    <!-- Services Start -->
-    <div class="container-fluid pt-5" id="service">
+    <!-- Services Start (hidden to keep layout minimal) -->
+    <div class="container pt-5 d-none" id="service">
         <div class="container">
             <div class="service-h4 position-relative d-flex align-items-center justify-content-center">
                 <h1 class="display-1 text-uppercase text-white" style="-webkit-text-stroke: 1px #fce562;">Services</h1>
@@ -385,7 +431,7 @@
 
 
     <!-- Contact Start -->
-    <div class="container-fluid py-5" id="contact">
+    <div class="container py-5" id="contact">
         <div class="container">
             <div class="position-relative d-flex align-items-center justify-content-center">
                 <h1 class="display-1 text-uppercase text-white" style="-webkit-text-stroke: 1px #fce562;">Contact</h1>
