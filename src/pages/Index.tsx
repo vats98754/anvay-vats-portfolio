@@ -19,7 +19,7 @@ const Index = () => {
       <main className="min-h-[calc(100vh-4rem)] flex flex-col">
         <header className="section-padding py-16 md:py-20" aria-label="Intro">
           <div className="container-prose text-center animate-in fade-in slide-in-from-top-4 duration-500">
-            <h1 className="text-5xl md:text-7xl font-extrabold tracking-wider text-red-500">
+            <h1 className="text-5xl md:text-7xl font-extrabold tracking-wider text-cyan-400">
               Anvay's Portfolio
             </h1>
             <p className="mx-auto mt-6 max-w-2xl text-lg md:text-xl text-muted-foreground">
@@ -43,7 +43,7 @@ const Index = () => {
                 </Button>
               </a>
               <a href="/resume/resume_mle.pdf" target="_blank" rel="noreferrer">
-                <Button variant="outline" size="lg" className="hover-scale text-red-400 border-red-700 hover:bg-red-500/10">
+                <Button variant="outline" size="lg" className="hover-scale text-cyan-400 border-cyan-600 hover:bg-cyan-500/10">
                   <FileText className="mr-2" /> Resume
                 </Button>
               </a>

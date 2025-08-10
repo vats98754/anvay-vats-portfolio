@@ -7,7 +7,7 @@ const MultithreadingBot = () => {
       <main>
         <section className="section-padding">
           <div className="container-prose">
-            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-red-500">Multithreading Trading Bot</h1>
+            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-cyan-400">Multithreading Trading Bot</h1>
             <p className="mt-3 text-muted-foreground max-w-3xl">
               HFT across Solana/Ethereum with event-driven multithreading. Orchestrated Puppeteer + Hummingbot; integrated RPCs (Helius, Raydium).
             </p>

@@ -16,7 +16,7 @@ const Projects = () => {
       <main>
         <header className="section-padding pt-10 md:pt-12 pb-2 md:pb-3" aria-label="Projects header">
           <div className="container-prose">
-            <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight text-red-500">Profitable Projects</h1>
+            <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight text-cyan-400">Profitable Projects</h1>
             <p className="mt-2 text-muted-foreground">Selected builds with real metrics and outcomes.</p>
           </div>
         </header>

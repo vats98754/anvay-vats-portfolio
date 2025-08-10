@@ -16,7 +16,7 @@ const ThreeDPortfolio = () => {
       <main>
         <section className="section-padding">
           <div className="container-prose text-center">
-            <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-red-500">3D Portfolio</h1>
+            <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-cyan-400">3D Portfolio</h1>
             <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">An interactive 3D showcase is on the way. In the meantime, explore my projects.</p>
             <div className="mt-6">
               <a href="/projects" className="hover-scale"><Button variant="hero">Explore Projects</Button></a>

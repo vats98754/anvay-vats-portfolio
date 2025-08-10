@@ -16,7 +16,7 @@ const Work = () => {
       <main>
         <header className="section-padding pt-10 md:pt-12 pb-2 md:pb-3" aria-label="Work header">
           <div className="container-prose">
-            <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight text-red-500">Work</h1>
+            <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight text-cyan-400">Work</h1>
             <p className="mt-2 text-muted-foreground">A track record of shipping, learning, and measurable impact.</p>
           </div>
         </header>

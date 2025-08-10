@@ -18,7 +18,7 @@ const Navbar = () => {
         <NavLink
           to="/"
           aria-label="Go to home"
-          className="font-extrabold tracking-tight text-red-500 text-xl md:text-2xl transition-colors"
+                      className="font-extrabold tracking-tight text-cyan-400 text-xl md:text-2xl transition-colors"
           onMouseEnter={() => setBrandHover(true)}
           onMouseLeave={() => setBrandHover(false)}
         >

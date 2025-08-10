@@ -7,7 +7,7 @@ const Dynamis = () => {
       <main>
         <section className="section-padding">
           <div className="container-prose">
-            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-red-500">Dynamis Trading System</h1>
+            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-cyan-400">Dynamis Trading System</h1>
             <p className="mt-3 text-muted-foreground max-w-3xl">
               Low-latency Solana trading platform built with Python, Rust, Redis, and JAX on AWS (ECS Fargate, EC2, Secrets Manager, TGW, NATS).
               25ms token sniper, grammar-driven agentic workflows, and CUDA-accelerated OCR pipelines.
