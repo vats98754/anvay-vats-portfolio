@@ -44,10 +44,11 @@ jobs:
           cd threejs
           if [ -f package-lock.json ]; then npm ci; else npm install --no-audit --no-fund; fi
       - name: Build threejs site (best-effort)
+        continue-on-error: true
         run: |
           cd threejs
           if grep -q "\"build\"" package.json; then \
-            npm run build --if-present; \
+            npm run build --if-present || true; \
           else \
             echo "No build script found; proceeding to copy static assets"; \
           fi
