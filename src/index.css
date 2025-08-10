@@ -133,6 +133,24 @@ All colors MUST be HSL.
   .section-padding { @apply py-20 md:py-28; }
   .container-prose { @apply max-w-5xl mx-auto px-6; }
 
+  /* 3D button effect */
+  .btn-3d {
+    position: relative;
+    background: linear-gradient(180deg, hsl(var(--primary)) 0%, hsl(var(--primary) / 0.9) 100%);
+    color: hsl(var(--primary-foreground));
+    box-shadow: 0 12px 20px -8px hsl(var(--primary) / 0.45), inset 0 1px 0 hsl(var(--primary-glow));
+    transform-style: preserve-3d;
+    transition: transform 200ms ease, box-shadow 200ms ease;
+  }
+  .btn-3d::after {
+    content: "";
+    position: absolute; inset: 0; border-radius: inherit;
+    transform: translateZ(-6px);
+    box-shadow: 0 10px 0 hsl(var(--primary) / 0.5);
+  }
+  .btn-3d:hover { transform: translateY(-2px); }
+  .btn-3d:active { transform: translateY(0); box-shadow: 0 6px 12px -6px hsl(var(--primary)/0.4), inset 0 1px 0 hsl(var(--primary-glow)); }
+
   /* Interactive link underline */
   .story-link { position: relative; display: inline-block; }
   .story-link::after {
