@@ -27,6 +27,43 @@ jobs:
       - run: cp dist/index.html dist/404.html
       # If using custom domain, ensure CNAME ends up in dist:
       - run: echo "anvay.blog" > dist/CNAME
+      # Build the threejs branch into a subpath so it can be served alongside the main SPA
+      - name: Checkout threejs branch
+        uses: actions/checkout@v4
+        with:
+          ref: threejs
+          path: threejs
+      - name: Setup Node for threejs build
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: threejs/package-lock.json
+      - name: Install deps (threejs)
+        run: |
+          cd threejs
+          if [ -f package-lock.json ]; then npm ci; else npm install --no-audit --no-fund; fi
+      - name: Build threejs site (best-effort)
+        run: |
+          cd threejs
+          if grep -q "\"build\"" package.json; then \
+            npm run build --if-present; \
+          else \
+            echo "No build script found; proceeding to copy static assets"; \
+          fi
+      - name: Copy threejs output into dist/threejs
+        run: |
+          mkdir -p dist/threejs
+          if [ -d threejs/dist ]; then \
+            cp -R threejs/dist/* dist/threejs/; \
+          elif [ -d threejs/build ]; then \
+            cp -R threejs/build/* dist/threejs/; \
+          else \
+            cp -R threejs/public/* dist/threejs/ 2>/dev/null || true; \
+            cp -R threejs/* dist/threejs/ 2>/dev/null || true; \
+            rm -rf dist/threejs/node_modules dist/threejs/src dist/threejs/.git dist/threejs/package* dist/threejs/*.config.*; \
+          fi
+          if [ -f dist/threejs/index.html ]; then cp dist/threejs/index.html dist/threejs/404.html; fi
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

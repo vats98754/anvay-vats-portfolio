@@ -55,13 +55,7 @@ const Navbar = () => {
           <a href="mailto:a7vats@uwaterloo.ca" aria-label="Email me" className="hover-scale">
             <Button variant="hero" size="sm">Contact Me</Button>
           </a>
-          <a
-            href="https://vats98754.github.io/anvay-vats-portfolio-threejs/"
-            target="_blank"
-            rel="noreferrer"
-            aria-label="Open 3D portfolio"
-            className="hover-scale"
-          >
+          <a href="/threejs/" aria-label="Open 3D portfolio" className="hover-scale">
             <Button variant="threeD" size="sm">3D portfolio</Button>
           </a>
         </div>
