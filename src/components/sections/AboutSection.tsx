@@ -7,11 +7,11 @@ const AboutSection = () => {
   return (
     <Section id="about" title="About Me" subtitle="Interest, beliefs, and what drives my work." showHeader={false} noTopPadding>
       <div>
-      <p className="text-base leading-relaxed text-muted-foreground">
+        <p className="text-base leading-relaxed text-muted-foreground">
           <strong>Beliefs:</strong>
           <li>We are shaped by evolution and daily conditions.</li>
           <li>The world is inherently absurd; we assign reasons after events occur.</li>
-          <li>Experience is the brain’s construction of reality.</li>
+          <li>Experience is the brain's construction of reality.</li>
           <br />
           <strong>Interests:</strong>
           <li>Exploring why things exist and work as they do.</li>

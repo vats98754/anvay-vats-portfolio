@@ -6,6 +6,7 @@ const Navbar = () => {
   const items = [
     { href: "/work", label: "Work" },
     { href: "/projects", label: "Profitable Projects" },
+    { href: "/achievements", label: "Achievements" },
     { href: "/about", label: "About Me" },
     { href: "/resume/resume_mle.pdf", label: "Resume", external: true },
   ] as const;

@@ -104,6 +104,7 @@ const CursorFX = () => {
       const target = e.target as HTMLElement | null;
       const projectCard = target?.closest('[data-cursor-view="project"]') as HTMLElement | null;
       const workCard = target?.closest('[data-cursor-view="work"]') as HTMLElement | null;
+      const achievementCard = target?.closest('[data-cursor-view="achievement"]') as HTMLElement | null;
       
       if (projectCard) {
         // Check if it's an external link (will open in new tab)
@@ -145,6 +146,14 @@ const CursorFX = () => {
                style="position:absolute; left:50%; top:50%; background: hsla(${ORANGE}, 1); color: white; box-shadow: 0 6px 20px hsla(${ORANGE}, 0.35)">
             <svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7'/><circle cx='12' cy='12' r='3'/></svg>
             <span class="text-xs font-medium whitespace-nowrap">company webpage</span>
+          </div>`;
+      } else if (achievementCard) {
+        dot.classList.add("!bg-transparent", "!border-0");
+        dot.innerHTML = `
+          <div class="flex items-center gap-2 -translate-x-1/2 -translate-y-1/2 rounded-full px-3 py-1"
+               style="position:absolute; left:50%; top:50%; background: #f59e0b; color: white; box-shadow: 0 6px 20px rgba(245, 158, 11, 0.35)">
+            <svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7'/><circle cx='12' cy='12' r='3'/></svg>
+            <span class="text-xs font-medium whitespace-nowrap">achievement details</span>
           </div>`;
       } else {
         dot.classList.remove("!bg-transparent", "!border-0");

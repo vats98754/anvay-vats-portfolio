@@ -2,7 +2,7 @@ import Navbar from "@/components/Navbar";
 import LogosMarquee from "@/components/LogosMarquee";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Briefcase, User, FileText, Rocket } from "lucide-react";
+import { Briefcase, User, FileText, Rocket, Award } from "lucide-react";
 
 const Index = () => {
   const jsonLd = {
@@ -37,6 +37,11 @@ const Index = () => {
                   <Rocket className="mr-2" /> Projects
                 </Button>
               </a>
+              <a href="/achievements">
+                <Button variant="outline" size="lg" className="hover-scale text-amber-400 border-amber-700 hover:bg-amber-500/10">
+                  <Award className="mr-2" /> Achievements
+                </Button>
+              </a>
               <a href="/about">
                 <Button variant="outline" size="lg" className="hover-scale text-sky-400 border-sky-700 hover:bg-sky-500/10">
                   <User className="mr-2" /> About
@@ -51,7 +56,7 @@ const Index = () => {
           </div>
         </header>
 
-        <section className="pb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <section className="animate-in fade-in slide-in-from-bottom-4 duration-700">
           <div className="container-prose">
             <Card className="w-full bg-[hsl(var(--primary)/0.08)] border-[hsl(var(--primary))]/30 shadow-[0_12px_40px_-12px_hsla(24,94%,55%,0.25)]">
               <div className="p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6">

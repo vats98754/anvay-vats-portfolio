@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import Work from "./pages/Work";
 import Projects from "./pages/Projects";
 import About from "./pages/About";
+import Achievements from "./pages/Achievements";
 import ThreeDPortfolio from "./pages/ThreeDPortfolio";
 import NotFound from "./pages/NotFound";
 import CursorFX from "@/components/CursorFX";
@@ -29,6 +30,7 @@ const App = () => (
           <Route path="/projects/dynamis" element={<Dynamis />} />
           <Route path="/projects/multithreading-bot" element={<MultithreadingBot />} />
           <Route path="/about" element={<About />} />
+          <Route path="/achievements" element={<Achievements />} />
           <Route path="/3d-portfolio" element={<ThreeDPortfolio />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
