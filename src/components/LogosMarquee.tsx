@@ -4,7 +4,7 @@ const defaultCompanies = [
   { name: "UWaterloo", src: "/logos/uwaterloo.png" },
   { name: "DataCurve", src: "/logos/datacurve.jpg" },
   { name: "Y Combinator", src: "/logos/ycombinator.png" },
-  { name: "TIW Capital", src: "/logos/tiwcapital.png" },
+  { name: "TIW Private Equity", src: "/logos/tiwcapital.png" },
   { name: "MappedIn", src: "/logos/mappedin.png" },
   { name: "iLof", src: "/logos/ilof.jpg" },
   { name: "Arvo", src: "/logos/arvo.jpg" },
