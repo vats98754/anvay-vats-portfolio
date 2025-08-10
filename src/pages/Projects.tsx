@@ -13,7 +13,7 @@ const Projects = () => {
   return (
     <>
       <Navbar />
-      <main>
+      <main className="min-h-screen bg-gradient-to-br from-orange-950/40 via-orange-900/25 to-orange-800/15 animate-gradient-wave">
         <header className="section-padding pt-10 md:pt-12 pb-2 md:pb-3" aria-label="Projects header">
           <div className="container-prose">
             <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight text-cyan-400">Profitable Projects</h1>

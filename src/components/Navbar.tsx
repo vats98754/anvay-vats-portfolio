@@ -13,7 +13,7 @@ const Navbar = () => {
   const [brandHover, setBrandHover] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b bg-background/70 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b bg-background/40 backdrop-blur-md">
       <nav aria-label="Primary" className="container-prose flex h-16 items-center justify-between">
         <NavLink
           to="/"

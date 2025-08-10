@@ -10,6 +10,7 @@ import About from "./pages/About";
 import ThreeDPortfolio from "./pages/ThreeDPortfolio";
 import NotFound from "./pages/NotFound";
 import CursorFX from "@/components/CursorFX";
+import Footer from "@/components/Footer";
 import Dynamis from "./pages/Dynamis";
 import MultithreadingBot from "./pages/MultithreadingBot";
 
@@ -32,6 +33,7 @@ const App = () => (
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <Footer />
       </BrowserRouter>
       <CursorFX />
     </TooltipProvider>

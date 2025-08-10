@@ -130,9 +130,22 @@ All colors MUST be HSL.
     cursor: none !important;
   }
 
-  /* Smooth transitions for custom cursor */
+  /* Custom cursor styles */
   .custom-cursor {
     transition: transform 0.1s ease-out;
+    background: #ff8c00 !important;
+    border: none !important;
+    box-shadow: 0 0 20px rgba(255, 140, 0, 0.8) !important;
+  }
+
+  /* Button hover cursor effects */
+  button:hover ~ .custom-cursor,
+  .hover-scale:hover ~ .custom-cursor,
+  [role="button"]:hover ~ .custom-cursor,
+  a:hover ~ .custom-cursor {
+    transform: scale(1.5) !important;
+    background: rgba(255, 140, 0, 0.7) !important;
+    backdrop-filter: blur(4px);
   }
 }
 
@@ -245,6 +258,75 @@ All colors MUST be HSL.
   .hover-scale { @apply transition-transform duration-200; }
   .hover-scale:hover { transform: scale(1.05); }
 
+  /* Animated gradient wave background - Optimized for performance */
+  .animate-gradient-wave {
+    position: relative;
+    background-size: 200% 200%;
+    animation: gradient-wave 10s ease-in-out infinite;
+  }
+
+  .animate-gradient-wave::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      45deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.03) 50%,
+      transparent 100%
+    );
+    background-size: 200% 200%;
+    animation: shimmer-wave 8s ease-in-out infinite;
+    z-index: 1;
+  }
+
+  .animate-gradient-wave > * {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Homepage gradient animation - Optimized for performance */
+  .animate-homepage-gradient {
+    position: relative;
+    background: linear-gradient(
+      -45deg,
+      #0f172a 0%,
+      #1e293b 25%,
+      #334155 50%,
+      #475569 75%,
+      #64748b 100%
+    );
+    background-size: 200% 200%;
+    animation: homepage-flow 15s ease-in-out infinite;
+    overflow: hidden;
+  }
+
+  .animate-homepage-gradient::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(34, 197, 94, 0.08) 0%,
+      rgba(59, 130, 246, 0.08) 50%,
+      rgba(168, 85, 247, 0.08) 100%
+    );
+    background-size: 200% 200%;
+    animation: homepage-color-shift 20s ease-in-out infinite;
+    z-index: 1;
+  }
+
+  .animate-homepage-gradient > * {
+    position: relative;
+    z-index: 2;
+  }
+
   /* Marquee */
   .marquee { position: relative; overflow: hidden; }
   .marquee__track { display: flex; gap: 3rem; width: max-content; animation: marquee 25s linear infinite; }
@@ -253,3 +335,59 @@ All colors MUST be HSL.
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
+
+@keyframes gradient-wave {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes shimmer-wave {
+  0% { 
+    background-position: 0% 0%;
+    opacity: 0.3;
+  }
+  25% { 
+    background-position: 50% 25%;
+    opacity: 0.8;
+  }
+  50% { 
+    background-position: 100% 50%;
+    opacity: 1;
+  }
+  75% { 
+    background-position: 50% 75%;
+    opacity: 0.8;
+  }
+  100% { 
+    background-position: 0% 100%;
+    opacity: 0.3;
+  }
+}
+
+@keyframes homepage-flow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes homepage-color-shift {
+  0% { background-position: 0% 0%; }
+  50% { background-position: 100% 100%; }
+  100% { background-position: 0% 0%; }
+}
+
+  /* Performance optimizations */
+  .animate-homepage-gradient,
+  .animate-gradient-wave {
+    will-change: background-position;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+
+  .animate-homepage-gradient::before,
+  .animate-gradient-wave::before {
+    will-change: background-position;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }

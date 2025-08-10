@@ -20,54 +20,82 @@ const CursorFX = () => {
       const x = e.clientX;
       const y = e.clientY;
 
-      const ring = document.createElement("div");
-      ring.style.position = "fixed";
-      ring.style.left = `${x}px`;
-      ring.style.top = `${y}px`;
-      ring.style.width = "2px";
-      ring.style.height = "2px";
-      ring.style.border = `2px solid hsla(${ORANGE}, 0.6)`;
-      ring.style.borderRadius = "9999px";
-      ring.style.transform = "translate(-50%, -50%) scale(0.6)";
-      ring.style.opacity = "0.7";
-      ring.style.pointerEvents = "none";
-      container.appendChild(ring);
-      const ringAnim = ring.animate(
-        [
-          { transform: "translate(-50%, -50%) scale(0.6)", opacity: 0.7 },
-          { transform: "translate(-50%, -50%) scale(2.2)", opacity: 0 },
-        ],
-        { duration: 500, easing: "cubic-bezier(0.2, 0.8, 0.2, 1)" }
-      );
-      ringAnim.onfinish = () => ring.remove();
-
-      const particles = 10;
-      for (let i = 0; i < particles; i++) {
-        const p = document.createElement("div");
-        p.style.position = "fixed";
-        p.style.left = `${x}px`;
-        p.style.top = `${y}px`;
-        p.style.width = "6px";
-        p.style.height = "6px";
-        p.style.borderRadius = "9999px";
-        p.style.background = `hsla(${ORANGE}, 0.8)`;
-        p.style.boxShadow = "0 0 10px hsla(24,94%,55%,0.6)";
-        p.style.transform = "translate(-50%, -50%)";
-        p.style.pointerEvents = "none";
-        container.appendChild(p);
-        const angle = (Math.PI * 2 * i) / particles + Math.random() * 0.5;
-        const distance = 30 + Math.random() * 30;
+      // Create colorful sparkles
+      const colors = [
+        '#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', 
+        '#feca57', '#ff9ff3', '#54a0ff', '#5f27cd',
+        '#00d2d3', '#ff9f43', '#10ac84', '#ee5a24',
+        '#ff3838', '#2ed573', '#1e90ff', '#ff6348'
+      ];
+      
+      const sparkles = 15;
+      for (let i = 0; i < sparkles; i++) {
+        const sparkle = document.createElement("div");
+        sparkle.style.position = "fixed";
+        sparkle.style.left = `${x}px`;
+        sparkle.style.top = `${y}px`;
+        sparkle.style.width = "6px";
+        sparkle.style.height = "6px";
+        sparkle.style.borderRadius = "50%";
+        sparkle.style.background = colors[i % colors.length];
+        sparkle.style.boxShadow = `0 0 12px ${colors[i % colors.length]}`;
+        sparkle.style.transform = "translate(-50%, -50%)";
+        sparkle.style.pointerEvents = "none";
+        sparkle.style.zIndex = "9999";
+        container.appendChild(sparkle);
+        
+        const angle = (Math.PI * 2 * i) / sparkles + Math.random() * 0.5;
+        const distance = 40 + Math.random() * 40;
         const dx = Math.cos(angle) * distance;
         const dy = Math.sin(angle) * distance;
-        const particleAnim = p.animate(
+        
+        const sparkleAnim = sparkle.animate(
           [
-            { transform: "translate(-50%, -50%) translate(0, 0)", opacity: 1 },
-            { transform: `translate(-50%, -50%) translate(${dx}px, ${dy}px)`, opacity: 0 },
+            { 
+              transform: "translate(-50%, -50%) scale(0) rotate(0deg)", 
+              opacity: 1 
+            },
+            { 
+              transform: `translate(-50%, -50%) translate(${dx * 0.5}px, ${dy * 0.5}px) scale(1.2) rotate(180deg)`, 
+              opacity: 0.9 
+            },
+            { 
+              transform: `translate(-50%, -50%) translate(${dx}px, ${dy}px) scale(0) rotate(360deg)`, 
+              opacity: 0 
+            }
           ],
-          { duration: 500 + Math.random() * 250, easing: "ease-out" }
+          { 
+            duration: 800 + Math.random() * 400, 
+            easing: "cubic-bezier(0.25, 0.46, 0.45, 0.94)" 
+          }
         );
-        particleAnim.onfinish = () => p.remove();
+        
+        sparkleAnim.onfinish = () => sparkle.remove();
       }
+
+      // Add a central burst effect
+      const burstRing = document.createElement("div");
+      burstRing.style.position = "fixed";
+      burstRing.style.left = `${x}px`;
+      burstRing.style.top = `${y}px`;
+      burstRing.style.width = "4px";
+      burstRing.style.height = "4px";
+      burstRing.style.border = `3px solid #ff8c00`;
+      burstRing.style.borderRadius = "50%";
+      burstRing.style.transform = "translate(-50%, -50%) scale(0.5)";
+      burstRing.style.opacity = "0.8";
+      burstRing.style.pointerEvents = "none";
+      burstRing.style.zIndex = "9998";
+      container.appendChild(burstRing);
+      
+      const ringAnim = burstRing.animate(
+        [
+          { transform: "translate(-50%, -50%) scale(0.5)", opacity: 0.8 },
+          { transform: "translate(-50%, -50%) scale(3)", opacity: 0 },
+        ],
+        { duration: 600, easing: "cubic-bezier(0.2, 0.8, 0.2, 1)" }
+      );
+      ringAnim.onfinish = () => burstRing.remove();
     };
 
     window.addEventListener("mousemove", move);
@@ -136,7 +164,7 @@ const CursorFX = () => {
       <div
         ref={dotRef}
         className="fixed left-0 top-0 -translate-x-1/2 -translate-y-1/2 rounded-full custom-cursor"
-        style={{ width: 14, height: 14, background: "hsla(24, 94%, 55%, 0.15)", boxShadow: "0 0 30px hsla(24,94%,55%,0.35)", border: "1px solid hsla(24, 94%, 55%, 0.35)" }}
+        style={{ width: 14, height: 14, background: "#ff8c00", boxShadow: "0 0 20px rgba(255, 140, 0, 0.8)", border: "none" }}
       />
     </div>
   );

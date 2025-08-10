@@ -16,7 +16,7 @@ const Index = () => {
   return (
     <>
       <Navbar />
-      <main className="min-h-[calc(100vh-4rem)] flex flex-col">
+      <main className="h-screen flex flex-col animate-homepage-gradient overflow-hidden">
         <header className="section-padding py-16 md:py-20" aria-label="Intro">
           <div className="container-prose text-center animate-in fade-in slide-in-from-top-4 duration-500">
             <h1 className="text-5xl md:text-7xl font-extrabold tracking-wider text-cyan-400">

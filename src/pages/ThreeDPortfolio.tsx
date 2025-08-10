@@ -13,7 +13,7 @@ const ThreeDPortfolio = () => {
   return (
     <>
       <Navbar />
-      <main>
+      <main className="min-h-screen bg-gradient-to-br from-cyan-950/30 via-cyan-900/15 to-cyan-800/10 animate-gradient-wave">
         <section className="section-padding">
           <div className="container-prose text-center">
             <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-cyan-400">3D Portfolio</h1>

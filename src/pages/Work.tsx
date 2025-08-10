@@ -13,7 +13,7 @@ const Work = () => {
   return (
     <>
       <Navbar />
-      <main>
+      <main className="min-h-screen bg-gradient-to-br from-emerald-950/40 via-emerald-900/25 to-emerald-800/15 animate-gradient-wave">
         <header className="section-padding pt-10 md:pt-12 pb-2 md:pb-3" aria-label="Work header">
           <div className="container-prose">
             <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight text-cyan-400">Work</h1>
