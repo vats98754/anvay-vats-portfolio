@@ -60,6 +60,7 @@ jobs:
           mkdir -p dist/threejs
           # Copy the built TypeScript output
           if [ -d threejs/dist ]; then
+            echo "✅ Copying compiled TypeScript output..."
             cp -R threejs/dist/* dist/threejs/
             # Copy the HTML file and assets
             cp threejs/index.html dist/threejs/
@@ -67,17 +68,26 @@ jobs:
             cp -R threejs/scss dist/threejs/ 2>/dev/null || true
             cp -R threejs/assets dist/threejs/ 2>/dev/null || true
             cp -R threejs/img dist/threejs/ 2>/dev/null || true
+            cp -R threejs/lib dist/threejs/ 2>/dev/null || true
             # Create 404.html for SPA routing
             cp dist/threejs/index.html dist/threejs/404.html
+            echo "✅ threejs deployment ready"
           else
-            echo "threejs build failed, copying static assets only"
+            echo "❌ threejs build failed, copying static assets only"
             cp threejs/index.html dist/threejs/
             cp -R threejs/css dist/threejs/ 2>/dev/null || true
             cp -R threejs/scss dist/threejs/ 2>/dev/null || true
             cp -R threejs/assets dist/threejs/ 2>/dev/null || true
             cp -R threejs/img dist/threejs/ 2>/dev/null || true
+            cp -R threejs/lib dist/threejs/ 2>/dev/null || true
             cp dist/threejs/index.html dist/threejs/404.html
+            echo "⚠️ Using fallback static assets"
           fi
+          
+          # Verify the deployment structure
+          echo "📁 Final threejs directory structure:"
+          find dist/threejs -type f | head -20
+          echo "📊 Total files in threejs: $(find dist/threejs -type f | wc -l)"
       
       - uses: actions/upload-pages-artifact@v3
         with:
