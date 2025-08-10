@@ -76,14 +76,40 @@ const CursorFX = () => {
       const target = e.target as HTMLElement | null;
       const projectCard = target?.closest('[data-cursor-view="project"]') as HTMLElement | null;
       const workCard = target?.closest('[data-cursor-view="work"]') as HTMLElement | null;
+      
       if (projectCard) {
+        // Check if it's an external link (will open in new tab)
+        const linkElement = projectCard.closest('a');
+        const isExternal = linkElement?.getAttribute('target') === '_blank';
+        
+        // Get the project image if available
+        const projectImage = projectCard.querySelector('img')?.getAttribute('src');
+        
         dot.classList.add("!bg-transparent", "!border-0");
-        dot.innerHTML = `
-          <div class="flex items-center gap-2 -translate-x-1/2 -translate-y-1/2 rounded-full px-3 py-1"
-               style="position:absolute; left:50%; top:50%; background: hsla(${ORANGE}, 1); color: white; box-shadow: 0 6px 20px hsla(${ORANGE}, 0.35)">
-            <svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7'/><circle cx='12' cy='12' r='3'/></svg>
-            <span class="text-xs font-medium whitespace-nowrap">project demo</span>
-          </div>`;
+        
+        if (projectImage && projectImage !== "/placeholder.svg") {
+          // Show project image with new tab indicator for external links
+          dot.innerHTML = `
+            <div style="position:absolute; left:50%; top:50%; transform: translate(-50%, -100%); margin-top: -10px; background: white; box-shadow: 0 8px 25px rgba(0,0,0,0.15); border: 2px solid hsla(${ORANGE}, 0.8); border-radius: 8px; overflow: hidden;">
+              <img src="${projectImage}" alt="project preview" style="width: 100%; height: 50%; object-fit: cover; display: block; border-radius: 6px 6px 0 0;" />
+              <div class="px-3 py-2 text-center" style="background: hsla(${ORANGE}, 1); color: white;">
+                <div class="flex items-center gap-1 justify-center">
+                  <svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7'/><circle cx='12' cy='12' r='3'/></svg>
+                  <span class="text-xs font-medium">${isExternal ? 'Open in new tab' : 'View project'}</span>
+                  ${isExternal ? '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15,3 21,3 21,9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>' : ''}
+                </div>
+              </div>
+            </div>`;
+        } else {
+          // Fallback for projects without images
+          dot.innerHTML = `
+            <div class="flex items-center gap-2 -translate-x-1/2 -translate-y-full"
+                 style="position:absolute; left:50%; top:50%; background: hsla(${ORANGE}, 1); color: white; box-shadow: 0 6px 20px hsla(${ORANGE}, 0.35); border-radius: 20px; padding: 8px 12px; margin-top: -10px;">
+              <svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7'/><circle cx='12' cy='12' r='3'/></svg>
+              <span class="text-xs font-medium whitespace-nowrap">${isExternal ? 'Open in new tab' : 'View project'}</span>
+              ${isExternal ? '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15,3 21,3 21,9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>' : ''}
+            </div>`;
+        }
       } else if (workCard) {
         dot.classList.add("!bg-transparent", "!border-0");
         dot.innerHTML = `
@@ -109,7 +135,7 @@ const CursorFX = () => {
     <div ref={containerRef} className="pointer-events-none fixed inset-0 z-[60]">
       <div
         ref={dotRef}
-        className="fixed left-0 top-0 -translate-x-1/2 -translate-y-1/2 rounded-full"
+        className="fixed left-0 top-0 -translate-x-1/2 -translate-y-1/2 rounded-full custom-cursor"
         style={{ width: 14, height: 14, background: "hsla(24, 94%, 55%, 0.15)", boxShadow: "0 0 30px hsla(24,94%,55%,0.35)", border: "1px solid hsla(24, 94%, 55%, 0.35)" }}
       />
     </div>
