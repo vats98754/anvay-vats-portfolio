@@ -25,10 +25,18 @@ export class Config {
   public static getAssetBaseUrl(): string {
     // Check if we're on GitHub Pages with custom domain
     if (window.location.hostname === 'anvay.blog') {
+      // Check if we're in the threejs subdirectory
+      if (window.location.pathname.startsWith('/threejs/')) {
+        return window.location.origin + '/threejs/';
+      }
       return window.location.origin + '/';
     }
     // Check if we're on GitHub Pages default domain
     if (window.location.hostname.includes('github.io')) {
+      // Check if we're in the threejs subdirectory
+      if (window.location.pathname.startsWith('/anvay-vats-portfolio/threejs/')) {
+        return window.location.origin + '/anvay-vats-portfolio/threejs/';
+      }
       return window.location.origin + '/anvay-vats-portfolio/';
     }
     // Local development or other hosting

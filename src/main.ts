@@ -73,10 +73,27 @@ export class PortfolioApp {
           console.log('🧪 Testing asset paths...');
           console.log('Base URL:', Config.getAssetBaseUrl());
           console.log('GLTF Models:', Config.getGLTFModels());
+          console.log('Current pathname:', window.location.pathname);
+          console.log('Current hostname:', window.location.hostname);
         },
         getSceneInfo: () => {
           if (this.sceneManager) {
             console.log('🎬 Scene info:', this.sceneManager);
+          }
+        },
+        testAssetLoading: async () => {
+          console.log('🧪 Testing asset loading...');
+          const testAsset = Config.getAssetBaseUrl() + 'assets/the_thinker_by_auguste_rodin/scene.gltf';
+          try {
+            const response = await fetch(testAsset, { method: 'HEAD' });
+            console.log('Asset test result:', {
+              url: testAsset,
+              status: response.status,
+              ok: response.ok,
+              headers: Object.fromEntries(response.headers.entries())
+            });
+          } catch (error) {
+            console.error('Asset test failed:', error);
           }
         }
       };
