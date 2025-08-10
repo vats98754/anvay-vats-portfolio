@@ -124,6 +124,16 @@ All colors MUST be HSL.
   a, button, [role="button"], input, textarea, select, label, summary {
     cursor: none !important;
   }
+
+  /* Ensure project cards don't show default cursor */
+  [data-cursor-view="project"] {
+    cursor: none !important;
+  }
+
+  /* Smooth transitions for custom cursor */
+  .custom-cursor {
+    transition: transform 0.1s ease-out;
+  }
 }
 
 @layer utilities {
@@ -133,23 +143,86 @@ All colors MUST be HSL.
   .section-padding { @apply py-20 md:py-28; }
   .container-prose { @apply max-w-5xl mx-auto px-6; }
 
-  /* 3D button effect */
+  /* Enhanced 3D button effect with beautiful color variety */
   .btn-3d {
     position: relative;
-    background: linear-gradient(180deg, hsl(var(--primary)) 0%, hsl(var(--primary) / 0.9) 100%);
-    color: hsl(var(--primary-foreground));
-    box-shadow: 0 12px 20px -8px hsl(var(--primary) / 0.45), inset 0 1px 0 hsl(var(--primary-glow));
+    background: linear-gradient(135deg, 
+      #ff6b6b 0%, 
+      #4ecdc4 25%, 
+      #45b7d1 50%, 
+      #96ceb4 75%, 
+      #feca57 100%);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 
+      0 8px 16px -4px rgba(255, 107, 107, 0.4),
+      0 4px 8px -2px rgba(78, 205, 196, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.2);
     transform-style: preserve-3d;
-    transition: transform 200ms ease, box-shadow 200ms ease;
+    transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    transform: perspective(1000px) rotateX(0deg);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   }
+  
+  .btn-3d::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(135deg, 
+      rgba(255, 255, 255, 0.2) 0%, 
+      transparent 30%, 
+      rgba(78, 205, 196, 0.1) 60%, 
+      rgba(255, 255, 255, 0.1) 100%);
+    transform: translateZ(-1px);
+    pointer-events: none;
+  }
+  
   .btn-3d::after {
     content: "";
-    position: absolute; inset: 0; border-radius: inherit;
-    transform: translateZ(-6px);
-    box-shadow: 0 10px 0 hsl(var(--primary) / 0.5);
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    transform: translateZ(-8px);
+    box-shadow: 
+      0 12px 24px -8px rgba(255, 107, 107, 0.5),
+      0 6px 12px -4px rgba(78, 205, 196, 0.4),
+      0 4px 8px -2px rgba(150, 206, 180, 0.3);
+    filter: blur(1px);
   }
-  .btn-3d:hover { transform: translateY(-2px); }
-  .btn-3d:active { transform: translateY(0); box-shadow: 0 6px 12px -6px hsl(var(--primary)/0.4), inset 0 1px 0 hsl(var(--primary-glow)); }
+  
+  .btn-3d:hover {
+    transform: perspective(1000px) rotateX(5deg) translateY(-3px);
+    background: linear-gradient(135deg, 
+      #ff8e8e 0%, 
+      #6ed5cc 25%, 
+      #5fc1d9 50%, 
+      #a8d8c4 75%, 
+      #ffd67a 100%);
+    box-shadow: 
+      0 16px 32px -8px rgba(255, 107, 107, 0.6),
+      0 8px 16px -4px rgba(78, 205, 196, 0.5),
+      0 4px 8px -2px rgba(150, 206, 180, 0.4),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+  }
+  
+  .btn-3d:active {
+    transform: perspective(1000px) rotateX(0deg) translateY(0);
+    background: linear-gradient(135deg, 
+      #e55a5a 0%, 
+      #3eb3aa 25%, 
+      #35a0b8 50%, 
+      #85b8a4 75%, 
+      #e6b84e 100%);
+    box-shadow: 
+      0 4px 8px -2px rgba(255, 107, 107, 0.4),
+      0 2px 4px -1px rgba(78, 205, 196, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+    transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
 
   /* Interactive link underline */
   .story-link { position: relative; display: inline-block; }
