@@ -14,6 +14,7 @@ import CursorFX from "@/components/CursorFX";
 import Footer from "@/components/Footer";
 import Dynamis from "./pages/Dynamis";
 import MultithreadingBot from "./pages/MultithreadingBot";
+import SwipeNavigator from "@/components/SwipeNavigator";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +24,8 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        {/* Global swipe + keyboard navigation */}
+        <SwipeNavigator />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/work" element={<Work />} />

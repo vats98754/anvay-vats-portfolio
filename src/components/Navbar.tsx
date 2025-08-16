@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
 import { useState } from "react";
+import { toast } from "@/components/ui/use-toast";
 
 const Navbar = () => {
   const items = [
@@ -25,7 +26,8 @@ const Navbar = () => {
         >
           {brandHover ? "Home" : "Anvay"}
         </NavLink>
-        <div className="hidden gap-6 md:flex">
+        {/* Make nav links visible on mobile with horizontal scroll if needed */}
+        <div className="flex gap-4 md:gap-6 max-w-[55%] md:max-w-none overflow-x-auto whitespace-nowrap scrollbar-none">
           {items.map((item) =>
             (item as any).external ? (
               <a
@@ -56,9 +58,16 @@ const Navbar = () => {
           <a href="mailto:a7vats@uwaterloo.ca" aria-label="Email me" className="hover-scale">
             <Button variant="hero" size="sm">Contact Me</Button>
           </a>
-          <a href="/threejs/" aria-label="Open 3D portfolio" className="hover-scale">
-            <Button variant="threeD" size="sm">3D portfolio</Button>
-          </a>
+          <Button
+            variant="threeD"
+            size="sm"
+            className="hover-scale"
+            aria-label="Open 3D portfolio"
+            type="button"
+            onClick={() => toast({ title: "coming soon :)" })}
+          >
+            3D portfolio
+          </Button>
         </div>
       </nav>
     </header>
