@@ -11,7 +11,7 @@ interface SectionProps {
 
 const Section = ({ id, title, subtitle, children, showHeader = true, noTopPadding = false }: SectionProps) => {
   return (
-    <section id={id} className={`section-padding ${noTopPadding ? "pt-0 md:pt-0" : ""}`}>
+    <section id={id} className={`section-padding reveal ${noTopPadding ? "pt-0 md:pt-0" : ""}`}>
       <div className="container-prose">
         {showHeader && (
           <header className="mb-10">

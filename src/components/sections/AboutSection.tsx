@@ -6,7 +6,7 @@ const interests = ["Computer Science", "Mathematics", "Data Science", "Cryptogra
 const AboutSection = () => {
   return (
     <Section id="about" title="About Me" subtitle="Interest, beliefs, and what drives my work." showHeader={false} noTopPadding>
-      <div>
+      <div className="reveal">
         <p className="text-base leading-relaxed text-muted-foreground">
           <strong>Beliefs:</strong>
           <li>We are shaped by evolution and daily conditions.</li>
@@ -27,8 +27,8 @@ const AboutSection = () => {
         </p>
       </div>
       <div className="mt-6 flex flex-wrap gap-2">
-        {interests.map((i) => (
-          <Badge key={i} variant="secondary">{i}</Badge>
+        {interests.map((i, idx) => (
+          <Badge key={i} variant="secondary" className="reveal" style={{ transitionDelay: `${idx * 60}ms` }}>{i}</Badge>
         ))}
       </div>
     </Section>

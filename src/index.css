@@ -144,9 +144,13 @@ All colors MUST be HSL.
   [role="button"]:hover ~ .custom-cursor,
   a:hover ~ .custom-cursor {
     transform: scale(1.5) !important;
-    background: rgba(255, 140, 0, 0.7) !important;
+    background: #ff8c00 !important;
     backdrop-filter: blur(4px);
   }
+
+  /* Scroll reveal base state */
+  .reveal { opacity: 0; transform: translateY(16px) scale(0.98); filter: blur(2px); transition: opacity 380ms ease, transform 380ms ease, filter 380ms ease; }
+  .reveal--visible { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
 }
 
 @layer utilities {

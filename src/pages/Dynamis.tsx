@@ -1,12 +1,14 @@
 import Navbar from "@/components/Navbar";
+import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 
 const Dynamis = () => {
+  useScrollReveal();
   return (
     <>
       <Navbar />
       <main>
         <section className="section-padding">
-          <div className="container-prose">
+          <div className="container-prose reveal">
             <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-cyan-400">Dynamis Trading System</h1>
             <p className="mt-3 text-muted-foreground max-w-3xl">
               Low-latency Solana trading platform built with Python, Rust, Redis, and JAX on AWS (ECS Fargate, EC2, Secrets Manager, TGW, NATS).

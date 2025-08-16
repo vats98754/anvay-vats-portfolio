@@ -1,12 +1,14 @@
 import Navbar from "@/components/Navbar";
+import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 
 const MultithreadingBot = () => {
+  useScrollReveal();
   return (
     <>
       <Navbar />
       <main>
         <section className="section-padding">
-          <div className="container-prose">
+          <div className="container-prose reveal">
             <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-cyan-400">Multithreading Trading Bot</h1>
             <p className="mt-3 text-muted-foreground max-w-3xl">
               HFT across Solana/Ethereum with event-driven multithreading. Orchestrated Puppeteer + Hummingbot; integrated RPCs (Helius, Raydium).
