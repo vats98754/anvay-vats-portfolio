@@ -26,8 +26,7 @@ const Navbar = () => {
         >
           {brandHover ? "Home" : "Anvay"}
         </NavLink>
-        {/* Make nav links visible on mobile with horizontal scroll if needed */}
-        <div className="flex gap-4 md:gap-6 max-w-[55%] md:max-w-none overflow-x-auto whitespace-nowrap scrollbar-none">
+        <div className="hidden gap-6 md:flex">
           {items.map((item) =>
             (item as any).external ? (
               <a
