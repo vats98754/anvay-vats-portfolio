@@ -1,0 +1,103 @@
+name: Deploy to GitHub Pages
+on:
+  push:
+    branches: [ design ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: cp dist/index.html dist/404.html
+      # If using custom domain, ensure CNAME ends up in dist:
+      - run: echo "anvay.blog" > dist/CNAME
+      
+      # Build the threejs branch into a subpath so it can be served alongside the main SPA
+      - name: Checkout threejs branch
+        uses: actions/checkout@v4
+        with:
+          ref: threejs
+          path: threejs
+      
+      - name: Setup Node for threejs build
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: threejs/package-lock.json
+      
+      - name: Install deps (threejs)
+        run: |
+          cd threejs
+          if [ -f package-lock.json ]; then npm ci; else npm install --no-audit --no-fund; fi
+      
+      - name: Fix TypeScript error and build threejs
+        run: |
+          cd threejs
+          # Fix the timeout type error by updating the Utils.ts file
+          sed -i 's/let timeout: number | null = null;/let timeout: ReturnType<typeof setTimeout> | null = null;/' src/utils/Utils.ts
+          # Build the TypeScript project
+          npm run build
+      
+      - name: Copy threejs output into dist/threejs
+        run: |
+          mkdir -p dist/threejs
+          # Copy the built TypeScript output
+          if [ -d threejs/dist ]; then
+            echo "✅ Copying compiled TypeScript output..."
+            cp -R threejs/dist/* dist/threejs/
+            # Copy the HTML file and assets
+            cp threejs/index.html dist/threejs/
+            cp -R threejs/css dist/threejs/ 2>/dev/null || true
+            cp -R threejs/scss dist/threejs/ 2>/dev/null || true
+            cp -R threejs/assets dist/threejs/ 2>/dev/null || true
+            cp -R threejs/img dist/threejs/ 2>/dev/null || true
+            cp -R threejs/lib dist/threejs/ 2>/dev/null || true
+            # Create 404.html for SPA routing
+            cp dist/threejs/index.html dist/threejs/404.html
+            echo "✅ threejs deployment ready"
+          else
+            echo "❌ threejs build failed, copying static assets only"
+            cp threejs/index.html dist/threejs/
+            cp -R threejs/css dist/threejs/ 2>/dev/null || true
+            cp -R threejs/scss dist/threejs/ 2>/dev/null || true
+            cp -R threejs/assets dist/threejs/ 2>/dev/null || true
+            cp -R threejs/img dist/threejs/ 2>/dev/null || true
+            cp -R threejs/lib dist/threejs/ 2>/dev/null || true
+            cp dist/threejs/index.html dist/threejs/404.html
+            echo "⚠️ Using fallback static assets"
+          fi
+          
+          # Verify the deployment structure
+          echo "📁 Final threejs directory structure:"
+          find dist/threejs -type f | head -20
+          echo "📊 Total files in threejs: $(find dist/threejs -type f | wc -l)"
+      
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
