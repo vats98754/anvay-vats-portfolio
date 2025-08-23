@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { NavLink } from "react-router-dom";
 import { useState } from "react";
 import { toast } from "@/components/ui/use-toast";
+import { Calendar } from "lucide-react";
 
 const Navbar = () => {
   const items = [
@@ -20,7 +21,7 @@ const Navbar = () => {
         <NavLink
           to="/"
           aria-label="Go to home"
-                      className="font-extrabold tracking-tight text-cyan-400 text-xl md:text-2xl transition-colors"
+          className="font-extrabold tracking-tight text-cyan-400 text-xl md:text-2xl transition-colors"
           onMouseEnter={() => setBrandHover(true)}
           onMouseLeave={() => setBrandHover(false)}
         >
@@ -54,9 +55,19 @@ const Navbar = () => {
           )}
         </div>
         <div className="flex items-center gap-2">
-          <a href="mailto:a7vats@uwaterloo.ca" aria-label="Email me" className="hover-scale">
-            <Button variant="hero" size="sm">Contact Me</Button>
-          </a>
+            <a
+              href="https://calendly.com/vats98754-gapps/open-chat"
+              aria-label="Book a meeting"
+              className="hover-scale"
+              target="_blank"
+              rel="noopener noreferrer"
+              data-cursor-view="calendar"
+            >
+              <Button variant="hero" size="sm">
+                <Calendar className="h-4 w-4 mr-2" />
+                Book a Meeting
+              </Button>
+            </a>
           <Button
             variant="threeD"
             size="sm"
