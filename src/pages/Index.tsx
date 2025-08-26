@@ -48,7 +48,7 @@ const Index = () => {
               Anvay's Portfolio
             </h1>
             <p className="mx-auto mt-6 max-w-2xl text-lg md:text-xl text-muted-foreground">
-              I have worked in teams to make{" "}
+              I have worked in teams to allow trades in{" "}
               <span className="text-green-500 font-semibold">millions of USD</span> via fast scripts on-chain for{" "}
               <span className="inline-flex items-center gap-1">
               <span
@@ -137,8 +137,8 @@ const Index = () => {
               </span>
               <br />
               <br />
-              I am currently project managing and lead developing large-scale agentic workflows for{" "}
-              <span className="text-green-500 font-semibold">6-figure contracts</span>, and building LMs from scratch for rigorous mathematical understanding.
+              I have project managed and lead developed large-scale agentic workflows for LLM-providers on{" "}
+              <span className="text-green-500 font-semibold">7-figure contracts</span>, and I'm currently building LMs from scratch out of mathematical curiosity.
               <br />
               <br />
               I keep backtesting with mixtures of statistical models on streaming timeseries data to backtest hypotheses about derivatives (Q) and stocks/equities (P).
