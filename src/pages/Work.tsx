@@ -16,11 +16,11 @@ const Work = () => {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen bg-gradient-to-br from-emerald-950/40 via-emerald-900/25 to-emerald-800/15 animate-gradient-wave">
+      <main className="min-h-screen bg-gradient-to-br from-emerald-900/50 via-cyan-900/35 to-emerald-800/25 animate-gradient-wave">
         <header className="section-padding pt-10 md:pt-12 pb-2 md:pb-3" aria-label="Work header">
           <div className="container-prose reveal">
-            <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight text-cyan-400">Work</h1>
-            <p className="mt-2 text-muted-foreground">A track record of shipping, learning, and measurable impact.</p>
+            <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight text-cyan-300 drop-shadow-[0_0_12px_rgba(34,211,238,0.35)]">Work</h1>
+            <p className="mt-2 text-muted-foreground/90">A track record of shipping, learning, and measurable impact.</p>
           </div>
         </header>
         <WorkSection />

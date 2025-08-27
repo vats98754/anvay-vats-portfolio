@@ -2,13 +2,12 @@ import Section from "./Section";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Briefcase } from "lucide-react";
-
 const experiences = [
 	{
-		role: "Founding Engineer",
+		role: "Founding AI Engineer",
 		company: "Cupertino Labs (Vercel AI Accelerator S25)",
 		period: "April 2025 — August 2025",
-		href: "https://www.unrepped.co/",
+		href: "",
 		location: "San Francisco",
 		stack: [
 			"CrewAI",
@@ -18,44 +17,43 @@ const experiences = [
 			"tRPC",
 			"Jenkins",
 			"SonarQube",
-			"DuckDB",
 			"SageMaker",
+			"Airflow",
 		],
-		summary:
-			"Shipped analytics and agentic workflows powering products at massive scale.",
+		summary: "Built analytics and multi-agent workflows for telecom-grade scale.",
 		impacts: [
-			"Shipped product used on 1 in 4 (2 billion) smartphones worldwide",
-			"Built analytics enabling ML model creation for churn data",
-			"Developed voice- and image-enabled agentic workflow to automate customer claims processing",
+			"Shipped the analytics engine used on 10 million+ smartphones worldwide, in contracts with AT&T and Airtel",
+			"Replaced ETL on GCP clusters with a CrewAI + Manus multi-agent workflow, cutting KPI reporting latency by 90%",
+			"Built DevSecOps Jenkins pipelines integrating SonarQube (coverage, SCA, quality gates), Fortify, and JFrog Xray",
 		],
 	},
 	{
-		role: "Full-Stack Developer",
+		role: "Data Engineer",
 		company: "DataCurve (YC W24)",
 		period: "October 2024 — December 2024",
 		href: "https://datacurve.ai/",
 		location: "San Francisco",
 		stack: [
 			"Elixir",
-			"TypeScript",
-			"Next.js",
+			"Ecto",
 			"GraphQL",
+			"TypeScript",
+			"NextJS",
 			"TablePlus",
+			"Postman",
 			"Clerk",
-			"Docker",
 		],
-		summary:
-			"Delivered data and ML infrastructure and product features for enterprise training-data pipelines.",
+		summary: "Delivered data ingestion and product features for LLM evaluation pipelines.",
 		impacts: [
-			"Managed a 7-figure contract with Cohere to supply training data for chain-of-thought and reasoning LLMs",
-			"Implemented custom GNN for freight optimization, running quantized LLMs on CPU via Ollama/llama.cpp",
-			"1 in 4 (2 billion) smartphones in the world use this analytics software",
+			"Managed a 7-figure contract to supply clean training data for Cohere's Chain-of-Thought LLM evaluation",
+			"Applied Ecto Repos, queries, and schemas with Elixir resolvers to ingest 1000+ user submissions",
+			"Added features for users to do real-time voice recordings to more accurately emulate human thought processes",
 		],
 	},
 	{
-		role: "Project Manager (Gen AI)",
+		role: "Lead Developer (Gen AI)",
 		company: "Arvo AI (Panache VC-backed)",
-		period: "August 2024 — December 2024",
+		period: "Aug 2024 — Dec 2024",
 		href: "https://www.arvoai.ca/",
 		location: "Montreal",
 		stack: [
@@ -63,23 +61,20 @@ const experiences = [
 			"React",
 			"Ollama",
 			"llama.cpp",
-			"MLflow",
+			"MLFlow",
 			"Weaviate",
 			"Docker",
-			"Airflow",
+			"Terraform",
 		],
-		summary:
-			"Led a team building an agentic logistics chatbot with robust MLOps and evaluation.",
+		summary: "Led design and development of a freight logistics scheduler with agentic workflows.",
 		impacts: [
-			"Lead developer of a team of 3 for a shipment logistics chatbot, deploying an agentic workflow in LangGraph",
-			"Implemented custom GNN for freight optimization, running quantized LLMs on CPU via Ollama/llama.cpp",
-			"Maintained PoWs, DoDs, GANTT, RACI, and RAID charts and closed 150+ tickets on Linear in Agile Kanban sprints",
-			"Dockerized modules and set up CI/CD with GitHub Actions (jobs, runners)",
-			"Achieved 90% accuracy, 95% recall, and ~100 ms response time on RAG, chart-generation, and tool-calling",
+			"Led design + development of a freight logistics scheduler on a 6-figure contract using LangGraph and Ollama",
+			"Made PoWs, DoDs, GANTT, RACI, and RAID logs and finished 150+ tickets on Linear in Agile Kanban sprints",
+			"Delivered GNN-based freight optimizer and RAG pipeline with 90% precision, 95% recall, and 100 ms latency",
 		],
 	},
 	{
-		role: "Quantitative Researcher",
+		role: "Quantitative Developer",
 		company: "TIW Capital ($200M+ AUM)",
 		period: "April 2024 — August 2024",
 		href: "https://tiwcg.com/",
@@ -92,15 +87,13 @@ const experiences = [
 			"Kafka",
 			"QuantLib",
 			"PostgreSQL",
-			"Go Routines",
+			"GoRoutines",
 		],
-		summary:
-			"Designed and deployed systematic strategies and real-time signal pipelines.",
+		summary: "Built systematic strategies and real-time signal pipelines for multi-asset trading.",
 		impacts: [
-			"Implemented dynamic risk optimization with variable position sizing and cross-sectional momentum, reducing drawdowns by 32% while maintaining alpha",
-			"Engineered high-frequency adaptive trend following algorithms with multi-asset normalized signal processing",
-			"Developed carry‑enhanced strategies with deep diversification models using LSTM networks",
-			"Deployed breakout detection and mean‑reversion systems with distributed Kafka streams for real-time signals",
+			"Implemented dynamic risk optimization using variable position sizing and cross-sectional momentum; reduced drawdowns by 32% while maintaining alpha",
+			"Engineered high-frequency adaptive trend following with multi-asset normalized signal processing",
+			"Developed carry-enhanced, fast mean-reversion strategies for breakout detection based in deep diversification",
 		],
 	},
 	{
@@ -119,8 +112,7 @@ const experiences = [
 			"PostgreSQL",
 			"AWS Lambda",
 		],
-		summary:
-			"Built high-performance data pipelines for photonics timeseries analysis with distributed computing.",
+		summary: "Built high-performance data pipelines for photonics timeseries analysis with distributed computing.",
 		impacts: [
 			"Engineered data-intensive pipeline for photonics timeseries with sub-100ms latency using Redis caching",
 			"Implemented distributed computing architecture with Celery and Docker with Probabilistic PCA",
@@ -129,24 +121,22 @@ const experiences = [
 		],
 	},
 	{
-		role: "SDK Developer",
+		role: "Graphics Developer",
 		company: "MappedIn",
 		period: "April 2023 — August 2023",
 		href: "https://www.mappedin.com/",
-		location: "Waterloo, ON (Hybrid)",
+		location: "Waterloo (Hybrid)",
 		stack: [
 			"TypeScript",
 			"Python (Jupyter)",
 			"ThreeJS",
 			"WebGL2",
 		],
-		summary:
-			"Developed 3D indoor mapping SDK used by 1000+ firms including Apple and Dubai Mall.",
+		summary: "Worked across SDK and ML teams on 3D indoor maps used by 1000+ firms.",
 		impacts: [
-			"Built core SDK features for major clients using TypeScript and ThreeJS",
-			"Applied Linear Algebra and Projective Geometry to optimize rendering performance",
-			"Implemented EdgeGAN with GNNs to enhance cGAN-based Map Digitizer",
-			"Contributed to SDK team serving 1000+ enterprise clients globally",
+			"Worked on SDK and ML teams developing 3D indoor maps used by 1000+ firms like Apple, Dubai Mall, and NFL",
+			"Applied rasterization, rendering, and projective geometry via SDK features and fixes using ThreeJS",
+			"Researched and implemented EdgeGAN with GNNs to improve our cGAN-based Map Digitizer for Microsoft",
 		],
 	},
 	{
@@ -163,8 +153,7 @@ const experiences = [
 			"OpenAI",
 			"AWS",
 		],
-		summary:
-			"Applied Generative AI using CNNs and Transformers for image captioning and MLOps deployment.",
+		summary: "Applied Generative AI using CNNs and Transformers for image captioning and MLOps deployment.",
 		impacts: [
 			"Applied Generative AI using CNNs: ResNets and Inception, and Transformers for image captioning",
 			"Applied OpenAI's Fine-Tuning for image-to-HTML/CSS, leveraging OCR, BERT, and image segmentation",
@@ -185,8 +174,7 @@ const experiences = [
 			"MATLAB",
 			"Tableau",
 		],
-		summary:
-			"Built full-stack ML app for 5000+ students to reduce food waste and overconsumption.",
+		summary: "Built full-stack ML app for 5000+ students to reduce food waste and overconsumption.",
 		impacts: [
 			"Made a full-stack machine learning app for 5000+ students to reduce overconsumption and food waste",
 			"Worked with Sodexo's AWS S3 architecture using PyTorch for Behavior Analytics and SQL for cleaning",
@@ -205,8 +193,7 @@ const experiences = [
 			"React + Redux",
 			"Node.js (MERN)",
 		],
-		summary:
-			"Developed social networking websites for NGOs with 200,000+ annual visitors using MERN stack.",
+		summary: "Developed social networking websites for NGOs with 200,000+ annual visitors using MERN stack.",
 		impacts: [
 			"Developed social networking websites for NGOs like BlackConnect with more than 200,000 annual visitors",
 			"Communicated with NGO partners to integrate Amazon with React frontends for E-commerce websites",
@@ -224,8 +211,7 @@ const experiences = [
 			"Google VR (Street View)",
 			"Blender (AR)",
 		],
-		summary:
-			"Enhanced VR/AR graphics with Unity3D and Three.js for improved rendering performance.",
+		summary: "Enhanced VR/AR graphics with Unity3D and Three.js for improved rendering performance.",
 		impacts: [
 			"Integrated Blender CAD models with Three.js, enhancing Google Street View rendering by 20%",
 			"Utilized Unity3D and WebGL for SSAO, optimizing VR scene rendering by 15% for our client TripAdvisor",
@@ -251,7 +237,7 @@ const WorkSection = () => {
 						className="mb-10 reveal"
 						style={{ transitionDelay: `${idx * 90}ms` }}
 					>
-						<span className="absolute -left-2 mt-2 flex h-4 w-4 items-center justify-center rounded-full bg-primary/10 ring-2 ring-primary">
+						<span className="absolute -left-2 mt-2 flex h-4 w-4 items-center justify-center rounded-full bg-primary/15 ring-2 ring-primary shadow-[0_0_12px_rgba(34,211,238,0.35)]">
 							<Briefcase className="h-3 w-3 text-primary" />
 						</span>
 						<a
@@ -262,7 +248,7 @@ const WorkSection = () => {
 							aria-label={`Open ${exp.company} website`}
 							data-cursor-view="work"
 						>
-							<Card className="hover:shadow-elevated transition-shadow">
+							<Card className="transition-shadow border border-cyan-400/10 bg-emerald-950/20 backdrop-blur-sm hover:border-cyan-300/30 hover:shadow-[0_0_24px_rgba(34,211,238,0.25)]">
 								<CardHeader>
 									<CardTitle className="text-xl text-[hsl(var(--primary))]">
 										{exp.role} · {exp.company}
